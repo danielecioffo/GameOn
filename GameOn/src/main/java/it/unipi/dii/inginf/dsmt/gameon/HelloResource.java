@@ -1,4 +1,4 @@
-package it.unipi.dii.inginf.dsmt.gameon.GameOn;
+package it.unipi.dii.inginf.dsmt.gameon;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
