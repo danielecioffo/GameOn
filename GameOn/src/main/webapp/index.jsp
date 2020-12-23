@@ -1,67 +1,10 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<!-- <!DOCTYPE html>
-<html>
-<head>
-    <title>JSP - Hello World</title>
-</head>
-<body>
-<h1><%= "Hello World!" %>
-</h1>
-<br/>
-<a href="hello-servlet">Hello Servlet</a>
-</body>
-</html> -->
-
 <!DOCTYPE html>
 <html>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>GameOn</title>
-    <style>
-        body {font-family: Arial, Helvetica, sans-serif;}
-        form {border: 3px solid #f1f1f1;}
-
-        input[type=text], input[type=password] {
-            width: 100%;
-            padding: 12px 20px;
-            margin: 8px 0;
-            display: inline-block;
-            border: 1px solid #ccc;
-            box-sizing: border-box;
-        }
-
-        button {
-            background-color: #3399ff;
-            color: white;
-            padding: 14px 20px;
-            margin: 8px 0;
-            border: none;
-            cursor: pointer;
-            width: 100%;
-        }
-
-        button:hover {
-            opacity: 0.8;
-        }
-
-        .imgcontainer {
-            text-align: center;
-            margin: 24px 0 12px 0;
-        }
-
-        img.icon {
-            width: 40%;
-            border-radius: 50%;
-        }
-
-        .container {
-            padding: 16px;
-        }
-
-        .center-text {
-            text-align: center;
-        }
-    </style>
+    <link href="resources/css/welcomePage.css" rel="stylesheet" type="text/css">
 </head>
 <body>
 
