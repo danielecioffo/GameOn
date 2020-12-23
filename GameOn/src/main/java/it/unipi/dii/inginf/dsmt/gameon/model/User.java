@@ -56,4 +56,14 @@ public class User {
     public void setConnectFourWins(int connectFourWins) {
         this.connectFourWins = connectFourWins;
     }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", battleShipWins=" + battleShipWins +
+                ", connectFourWins=" + connectFourWins +
+                '}';
+    }
 }

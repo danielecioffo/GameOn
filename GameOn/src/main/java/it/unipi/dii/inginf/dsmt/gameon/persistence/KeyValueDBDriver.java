@@ -13,17 +13,33 @@ import static org.iq80.leveldb.impl.Iq80DBFactory.bytes;
  * Class that contains the function used to interact with the Key-Value DB
  * Pattern of the keys: user:username:field
  */
-public class UsersDBDriver {
-    private static DB db = null;
+public class KeyValueDBDriver {
+    private static KeyValueDBDriver instance; //Singleton instance
+    private DB db;
+    private final String URL_DATABASE = "database";
+
+    private KeyValueDBDriver()
+    {
+        openDB();
+        printDatabase();
+    }
+
+    public static KeyValueDBDriver getInstance() {
+        if (instance == null)
+        {
+            instance = new KeyValueDBDriver();
+        }
+        return instance;
+    }
 
     /**
      * Function that open the connection with the Key-Value DB
      */
-    private static void openDB() {
+    private void openDB() {
         Options options = new Options();
         options.createIfMissing(true);
         try {
-            db = factory.open(new File("./../webapps/GameOn_war/resources/users"), options);
+            db = factory.open(new File(URL_DATABASE), options);
         } catch (IOException e) {
             closeDB();
         }
@@ -32,7 +48,7 @@ public class UsersDBDriver {
     /**
      * Function that close the connection with the Key-Value DB
      */
-    private static void closeDB() {
+    public void closeDB() {
         try {
             if (db != null) {
                 db.close();
@@ -47,7 +63,7 @@ public class UsersDBDriver {
      * @param key       Key of the tuple
      * @param value     Value of the tuple
      */
-    private static void putValue (String key, String value)
+    private void putValue (String key, String value)
     {
         db.put(bytes(key), bytes(value));
     }
@@ -57,7 +73,7 @@ public class UsersDBDriver {
      * @param key       Key of the tuple
      * @return          A string representation of the value
      */
-    private static String getValue (String key)
+    private String getValue (String key)
     {
         return asString(db.get(bytes(key)));
     }
@@ -66,7 +82,7 @@ public class UsersDBDriver {
      * Function that deletes the value given the key
      * @param key       Key of the tuple
      */
-    private static void deleteValue (String key)
+    private void deleteValue (String key)
     {
         db.delete(bytes(key));
     }
@@ -76,9 +92,10 @@ public class UsersDBDriver {
      * @param username      Username of the user
      * @return              The user if he is in the database, otherwise null
      */
-    public static User getUserFromUsername (final String username)
+    public User getUserFromUsername (final String username)
     {
-        openDB();
+        if (db == null)
+            openDB();
         User user = null;
         String password = getValue("user:" + username + ":password");
         // If this user is present in the DB
@@ -88,7 +105,6 @@ public class UsersDBDriver {
                     Integer.parseInt(getValue("user:" + username + ":battleShipWins")),
                     Integer.parseInt(getValue("user:" + username + ":connectFourWins")));
         }
-        closeDB();
         return user;
     }
 
@@ -98,16 +114,16 @@ public class UsersDBDriver {
      * @param password      Password to check
      * @return              The User, or null if it's not possible to do the login
      */
-    public static User login (final String username, final String password)
+    public User login (final String username, final String password)
     {
+        if (db == null)
+            openDB();
         User user = getUserFromUsername(username);
-        openDB();
         // If doesn't exist a User registered with that username, or if the password doesn't match
         if (user == null || !user.getPassword().equals(password))
         {
             return null;
         }
-        closeDB();
         return user;
     }
 
@@ -116,14 +132,14 @@ public class UsersDBDriver {
      * @param username      Username of the user
      * @return              True if exists, otherwise false
      */
-    public static boolean isRegistered (final String username)
+    public boolean isRegistered (final String username)
     {
+        if (db == null)
+            openDB();
         boolean registered = false;
-        openDB();
         String value = getValue("user:" + username + ":password");
         if (value != null)
             registered = true;
-        closeDB();
         return registered;
     }
 
@@ -132,21 +148,21 @@ public class UsersDBDriver {
      * @param username      Username of the user
      * @param password      Password of the user
      */
-    public static void register (final String username, final String password)
+    public void register (final String username, final String password)
     {
-        openDB();
-        putValue("user:" + username + "password", password);
-        putValue("user:" + username + "battleShipWins", String.valueOf(0));
-        putValue("user:" + username + "connectFourWins", String.valueOf(0));
-        closeDB();
+        if (db == null)
+            openDB();
+        putValue("user:" + username + ":password", password);
+        putValue("user:" + username + ":battleShipWins", String.valueOf(0));
+        putValue("user:" + username + ":connectFourWins", String.valueOf(0));
     }
 
     /**
      * Utility method used to delete all database content
      */
-    public static void truncateDatabase() {
-        openDB();
-
+    public void truncateDatabase() {
+        if (db == null)
+            openDB();
         try (final DBIterator iterator = db.iterator()) {
             for (iterator.seekToFirst(); iterator.hasNext(); iterator.next()) {
                 String key = asString(iterator.peekNext().getKey());
@@ -163,10 +179,9 @@ public class UsersDBDriver {
     /**
      * Prints all the content of the database.
      */
-    public static void printDatabase() {
-        // open database file
-        openDB();
-
+    public void printDatabase() {
+        if (db == null)
+            openDB();
         // iterate db content
         try (DBIterator iterator = db.iterator()) {
             for (iterator.seekToFirst(); iterator.hasNext(); iterator.next()) {
@@ -178,7 +193,6 @@ public class UsersDBDriver {
         } catch (IOException e) {
             System.out.println("Error printing the database content.");
             e.printStackTrace();
-        } finally {
             closeDB();
         }
     }

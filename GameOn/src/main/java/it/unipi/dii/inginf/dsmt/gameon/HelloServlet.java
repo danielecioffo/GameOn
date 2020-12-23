@@ -1,7 +1,5 @@
 package it.unipi.dii.inginf.dsmt.gameon;
 
-import it.unipi.dii.inginf.dsmt.gameon.persistence.UsersDBDriver;
-
 import java.io.*;
 import javax.servlet.http.*;
 import javax.servlet.annotation.*;
