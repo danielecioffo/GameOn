@@ -10,7 +10,7 @@
 
 <h1 class="center-text">Welcome to GameOn!</h1>
 
-<form action="hello-servlet" method="post">
+<form action="access-servlet" method="post">
     <div class="imgcontainer">
         <img src='resources/images/Icon.png' alt="App Icon" width="400">
     </div>
@@ -22,8 +22,8 @@
         <label><b>Password</b></label>
         <input type="password" placeholder="Enter Password" name="password" required>
 
-        <button type="submit">Login</button>
-        <button type="submit">Register</button>
+        <button type="submit" name="loginButton" value="login">Login</button>
+        <button type="submit" name="registerButton" value="register">Register</button>
     </div>
 </form>
 
