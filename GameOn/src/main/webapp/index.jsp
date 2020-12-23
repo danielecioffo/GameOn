@@ -69,7 +69,7 @@
 
 <form action="hello-servlet" method="post">
     <div class="imgcontainer">
-        <img src="/img/AppIcon.png" alt="App Icon" class="icon">
+        <img src='resources/images/Icon.png' alt="App Icon" width="400">
     </div>
 
     <div class="container">
