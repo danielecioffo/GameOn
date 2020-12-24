@@ -5,27 +5,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>GameOn</title>
     <link href="resources/css/welcomePage.css" rel="stylesheet" type="text/css">
+    <link href="resources/css/general.css" rel="stylesheet" type="text/css">
 </head>
 <body>
 
 <h1 class="center-text">Welcome to GameOn!</h1>
 
-<form action="access-servlet" method="post">
-    <div class="imgcontainer">
-        <img src='resources/images/Icon.png' alt="App Icon" width="400">
-    </div>
+<div style="width: 50%; margin: 0 auto">
+    <form action="access-servlet" method="post">
+        <div class="imgcontainer">
+            <img src='resources/images/icon.png' alt="App Icon" width="75%">
+        </div>
 
-    <div class="container">
-        <label><b>Username</b></label>
-        <input type="text" placeholder="Enter Username" name="username" required>
+        <div class="container">
+            <label><b>Username</b></label>
+            <input type="text" placeholder="Enter Username" name="username" required>
 
-        <label><b>Password</b></label>
-        <input type="password" placeholder="Enter Password" name="password" required>
+            <label><b>Password</b></label>
+            <input type="password" placeholder="Enter Password" name="password" required>
 
-        <button type="submit" name="loginButton" value="login">Login</button>
-        <button type="submit" name="registerButton" value="register">Register</button>
-    </div>
-</form>
+            <button class="mainButton" type="submit" name="loginButton" value="login">Login</button>
+            <button class="mainButton" type="submit" name="registerButton" value="register">Register</button>
+        </div>
+    </form>
 
+</div>
 </body>
 </html>

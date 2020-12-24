@@ -14,7 +14,7 @@ import static org.iq80.leveldb.impl.Iq80DBFactory.bytes;
  * Pattern of the keys: user:username:field
  */
 public class KeyValueDBDriver {
-    private static KeyValueDBDriver instance; //Singleton instance
+    private static volatile KeyValueDBDriver instance; //Singleton instance
     private DB db;
     private final String URL_DATABASE = "database";
 
@@ -24,10 +24,17 @@ public class KeyValueDBDriver {
         printDatabase();
     }
 
+    // Thread safe getInstance
     public static KeyValueDBDriver getInstance() {
         if (instance == null)
         {
-            instance = new KeyValueDBDriver();
+            synchronized (KeyValueDBDriver.class)
+            {
+                if (instance == null)
+                {
+                    instance = new KeyValueDBDriver();
+                }
+            }
         }
         return instance;
     }
@@ -94,8 +101,6 @@ public class KeyValueDBDriver {
      */
     public User getUserFromUsername (final String username)
     {
-        if (db == null)
-            openDB();
         User user = null;
         String password = getValue("user:" + username + ":password");
         // If this user is present in the DB
@@ -116,8 +121,6 @@ public class KeyValueDBDriver {
      */
     public User login (final String username, final String password)
     {
-        if (db == null)
-            openDB();
         User user = getUserFromUsername(username);
         // If doesn't exist a User registered with that username, or if the password doesn't match
         if (user == null || !user.getPassword().equals(password))
@@ -134,8 +137,6 @@ public class KeyValueDBDriver {
      */
     public boolean isRegistered (final String username)
     {
-        if (db == null)
-            openDB();
         boolean registered = false;
         String value = getValue("user:" + username + ":password");
         if (value != null)
@@ -150,8 +151,6 @@ public class KeyValueDBDriver {
      */
     public void register (final String username, final String password)
     {
-        if (db == null)
-            openDB();
         putValue("user:" + username + ":password", password);
         putValue("user:" + username + ":battleShipWins", String.valueOf(0));
         putValue("user:" + username + ":connectFourWins", String.valueOf(0));
@@ -161,8 +160,6 @@ public class KeyValueDBDriver {
      * Utility method used to delete all database content
      */
     public void truncateDatabase() {
-        if (db == null)
-            openDB();
         try (final DBIterator iterator = db.iterator()) {
             for (iterator.seekToFirst(); iterator.hasNext(); iterator.next()) {
                 String key = asString(iterator.peekNext().getKey());
@@ -171,7 +168,6 @@ public class KeyValueDBDriver {
         } catch (final IOException e) {
             System.out.println("Error truncating the database.");
             e.printStackTrace();
-        } finally {
             closeDB();
         }
     }
@@ -180,8 +176,6 @@ public class KeyValueDBDriver {
      * Prints all the content of the database.
      */
     public void printDatabase() {
-        if (db == null)
-            openDB();
         // iterate db content
         try (DBIterator iterator = db.iterator()) {
             for (iterator.seekToFirst(); iterator.hasNext(); iterator.next()) {

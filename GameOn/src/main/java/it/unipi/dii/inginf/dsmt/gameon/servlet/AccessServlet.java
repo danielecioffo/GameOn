@@ -9,6 +9,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.regex.Pattern;
@@ -24,25 +25,27 @@ public class AccessServlet extends HttpServlet {
         String username=request.getParameter("username");
         String password=request.getParameter("password");
 
+        HttpSession session = request.getSession(true);
+        RequestDispatcher requestDispatcher;
+
         // If the user has required a login operation
         if (request.getParameter("loginButton") != null)
         {
             User user = keyValueDBDriver.login(username, password);
             if (user != null)
             {
-                out.println("<html><body>");
-                out.println("<h1>" + username + " " + password + " correctly logged" + "</h1>");
-                out.println("</body></html>");
+                session.setAttribute("loggedUser",user);
+                requestDispatcher = request.getRequestDispatcher("ChooseGame.jsp");
+                requestDispatcher.include(request, response);
             }
             else{
                 out.print("Username or password wrong");
-                RequestDispatcher requestDispatcher = request.getRequestDispatcher("index.jsp");
+                requestDispatcher = request.getRequestDispatcher("index.jsp");
                 requestDispatcher.include(request, response);
             }
         }
         else // If the user has required a register operation
         {
-            RequestDispatcher requestDispatcher;
             if (keyValueDBDriver.isRegistered(username)) //The username is already in use
             {
                 out.print("Sorry, the username is already in use!");
@@ -55,9 +58,9 @@ public class AccessServlet extends HttpServlet {
                 if (Pattern.matches("^[a-zA-Z0-9_.]*$", username))
                 {
                     keyValueDBDriver.register(username, password);
-                    out.println("<html><body>");
-                    out.println("<h1>" + username + " " + password + " correctly registered" + "</h1>");
-                    out.println("</body></html>");
+                    session.setAttribute("loggedUser", new User(username, password, 0, 0));
+                    requestDispatcher = request.getRequestDispatcher("ChooseGame.jsp");
+                    requestDispatcher.include(request, response);
                 }
                 else
                 {
