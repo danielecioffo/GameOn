@@ -18,7 +18,6 @@
 <form action="logout-servlet" method="post">
     <input type="submit" value="Logout"/>
 </form>
-    <!--<button onclick="LogoutServlet" name="logoutButton" value="logout">Logout</button>-->
     <h1 class="center-text">Welcome <%
         User user = (User) session.getAttribute("loggedUser");
         out.println(user.getUsername() + "!");
