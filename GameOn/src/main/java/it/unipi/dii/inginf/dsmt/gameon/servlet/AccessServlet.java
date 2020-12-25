@@ -19,6 +19,15 @@ public class AccessServlet extends HttpServlet {
     private final KeyValueDBDriver keyValueDBDriver = KeyValueDBDriver.getInstance();
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        processRequest(request, response);
+    }
+
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        processRequest(request, response);
+    }
+
+    private void processRequest (HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+    {
         response.setContentType("text/html");
         PrintWriter out = response.getWriter();
 
@@ -26,7 +35,6 @@ public class AccessServlet extends HttpServlet {
         String password=request.getParameter("password");
 
         HttpSession session = request.getSession(true);
-        RequestDispatcher requestDispatcher;
 
         // If the user has required a login operation
         if (request.getParameter("loginButton") != null)
@@ -35,13 +43,11 @@ public class AccessServlet extends HttpServlet {
             if (user != null)
             {
                 session.setAttribute("loggedUser",user);
-                requestDispatcher = request.getRequestDispatcher("ChooseGame.jsp");
-                requestDispatcher.include(request, response);
+                request.getRequestDispatcher("chooseGame.jsp").include(request, response);
             }
             else{
                 out.print("Username or password wrong");
-                requestDispatcher = request.getRequestDispatcher("index.jsp");
-                requestDispatcher.include(request, response);
+                request.getRequestDispatcher("index.jsp").include(request, response);
             }
         }
         else // If the user has required a register operation
@@ -49,8 +55,7 @@ public class AccessServlet extends HttpServlet {
             if (keyValueDBDriver.isRegistered(username)) //The username is already in use
             {
                 out.print("Sorry, the username is already in use!");
-                requestDispatcher = request.getRequestDispatcher("index.jsp");
-                requestDispatcher.include(request, response);
+                request.getRequestDispatcher("index.jsp").include(request, response);
             }
             else
             {
@@ -59,22 +64,16 @@ public class AccessServlet extends HttpServlet {
                 {
                     keyValueDBDriver.register(username, password);
                     session.setAttribute("loggedUser", new User(username, password, 0, 0));
-                    requestDispatcher = request.getRequestDispatcher("ChooseGame.jsp");
-                    requestDispatcher.include(request, response);
+                    request.getRequestDispatcher("chooseGame.jsp").include(request, response);
                 }
                 else
                 {
                     out.print("Username not valid! Please use alphanumeric chars, underscore and dot");
-                    requestDispatcher = request.getRequestDispatcher("index.jsp");
-                    requestDispatcher.include(request, response);
+                    request.getRequestDispatcher("index.jsp").include(request, response);
                 }
             }
         }
 
         out.close();
-}
-
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
     }
 }

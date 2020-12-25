@@ -10,12 +10,15 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Title</title>
+    <title>GameOn</title>
     <link href="resources/css/chooseGamePage.css" rel="stylesheet" type="text/css">
     <link href="resources/css/general.css" rel="stylesheet" type="text/css">
 </head>
 <body>
-    <button onclick="" name="logoutButton" value="logout">Logout</button>
+<form action="logout-servlet" method="post">
+    <input type="submit" value="Logout"/>
+</form>
+    <!--<button onclick="LogoutServlet" name="logoutButton" value="logout">Logout</button>-->
     <h1 class="center-text">Welcome <%
         User user = (User) session.getAttribute("loggedUser");
         out.println(user.getUsername() + "!");
