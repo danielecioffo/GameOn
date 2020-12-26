@@ -26,7 +26,6 @@ public class KeyValueDBDriver {
     private KeyValueDBDriver()
     {
         openDB();
-        printDatabase();
     }
 
     /**

@@ -9,20 +9,17 @@ public class User {
     private int battleShipWins;
     private int connectFourWins;
 
-    public User (final String username, final String password)
-    {
-        this.username = username;
-        this.password = password;
-        this.battleShipWins = 0;
-        this.connectFourWins = 0;
-    }
-
     public User (final String username, final String password, final int battleShipWins, final int connectFourWins)
     {
         this.username = username;
         this.password = password;
         this.battleShipWins = battleShipWins;
         this.connectFourWins = connectFourWins;
+    }
+
+    public User (final String username, final String password)
+    {
+        this(username, password, 0, 0);
     }
 
     public String getUsername() {

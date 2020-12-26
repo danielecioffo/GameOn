@@ -1,7 +1,9 @@
 package it.unipi.dii.inginf.dsmt.gameon.servlet;
 
+import it.unipi.dii.inginf.dsmt.gameon.listener.SessionManager;
 import it.unipi.dii.inginf.dsmt.gameon.model.User;
 import it.unipi.dii.inginf.dsmt.gameon.persistence.KeyValueDBDriver;
+import it.unipi.dii.inginf.dsmt.gameon.utils.Utils;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -34,44 +36,49 @@ public class AccessServlet extends HttpServlet {
         String username=request.getParameter("username");
         String password=request.getParameter("password");
 
-        HttpSession session = request.getSession(true);
-
-        // If the user has required a login operation
-        if (request.getParameter("loginButton") != null)
+        if (username != null)
         {
-            User user = keyValueDBDriver.login(username, password);
-            if (user != null)
+            // If the user has required a login operation
+            if (request.getParameter("loginButton") != null)
             {
-                session.setAttribute("loggedUser",user);
-                request.getRequestDispatcher("chooseGame.jsp").include(request, response);
+                User user = keyValueDBDriver.login(username, password);
+                if (user != null)
+                {
+                    HttpSession session = request.getSession();
+                    session.setAttribute("loggedUser",user);
+                    Utils.goToPage("chooseGame.jsp", request, response);
+                }
+                else{
+                    out.print("Username or password wrong");
+                    Utils.goToPage("index.jsp", request, response);
+                }
             }
-            else{
-                out.print("Username or password wrong");
-                request.getRequestDispatcher("index.jsp").include(request, response);
+            else // If the user has required a register operation
+            {
+                if (keyValueDBDriver.isRegistered(username)) //The username is already in use
+                {
+                    out.print("Sorry, the username is already in use!");
+                    Utils.goToPage("index.jsp", request, response);
+                } else {
+                    // If the username is correctly formatted
+                    if (Pattern.matches("^[a-zA-Z0-9_.]*$", username)) {
+                        keyValueDBDriver.register(username, password);
+                        HttpSession session = request.getSession();
+                        session.setAttribute("loggedUser", new User(username, password, 0, 0));
+                        Utils.goToPage("chooseGame.jsp", request, response);
+                    } else {
+                        out.print("Username not valid! Please use alphanumeric chars, underscore and dot");
+                        Utils.goToPage("index.jsp", request, response);
+                    }
+                }
             }
         }
-        else // If the user has required a register operation
+        else
         {
-            if (keyValueDBDriver.isRegistered(username)) //The username is already in use
-            {
-                out.print("Sorry, the username is already in use!");
-                request.getRequestDispatcher("index.jsp").include(request, response);
-            }
+            if (request.getSession().getAttribute("loggedUser") != null)
+                Utils.goToPage("chooseGame.jsp", request, response);
             else
-            {
-                // If the username is correctly formatted
-                if (Pattern.matches("^[a-zA-Z0-9_.]*$", username))
-                {
-                    keyValueDBDriver.register(username, password);
-                    session.setAttribute("loggedUser", new User(username, password, 0, 0));
-                    request.getRequestDispatcher("chooseGame.jsp").include(request, response);
-                }
-                else
-                {
-                    out.print("Username not valid! Please use alphanumeric chars, underscore and dot");
-                    request.getRequestDispatcher("index.jsp").include(request, response);
-                }
-            }
+                Utils.goToPage("index.jsp", request, response);
         }
 
         out.close();
