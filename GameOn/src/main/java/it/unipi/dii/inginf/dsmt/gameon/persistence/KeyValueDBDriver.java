@@ -4,6 +4,8 @@ import it.unipi.dii.inginf.dsmt.gameon.model.User;
 import org.iq80.leveldb.DB;
 import org.iq80.leveldb.DBIterator;
 import org.iq80.leveldb.Options;
+import org.iq80.leveldb.WriteBatch;
+
 import java.io.File;
 import java.io.IOException;
 import static org.iq80.leveldb.impl.Iq80DBFactory.*;
@@ -18,13 +20,19 @@ public class KeyValueDBDriver {
     private DB db;
     private final String URL_DATABASE = "database";
 
+    /**
+     * Private constructor
+     */
     private KeyValueDBDriver()
     {
         openDB();
         printDatabase();
     }
 
-    // Thread safe getInstance
+    /**
+     * Thread safe getInstance
+     * @return  Always the same instance of a KeyValeDBDriver
+     */
     public static KeyValueDBDriver getInstance() {
         if (instance == null)
         {
@@ -151,9 +159,16 @@ public class KeyValueDBDriver {
      */
     public void register (final String username, final String password)
     {
-        putValue("user:" + username + ":password", password);
-        putValue("user:" + username + ":battleShipWins", String.valueOf(0));
-        putValue("user:" + username + ":connectFourWins", String.valueOf(0));
+        // I do all the operations in a batch, for the atomicity property
+        try (WriteBatch batch = db.createWriteBatch()) {
+            batch.put(bytes("user:" + username + ":password"), bytes(password));
+            batch.put(bytes("user:" + username + ":battleShipWins"), bytes(String.valueOf(0)));
+            batch.put(bytes("user:" + username + ":connectFourWins"), bytes(String.valueOf(0)));
+            db.write(batch);
+        } catch (final IOException e) {
+            e.printStackTrace();
+            closeDB();
+        }
     }
 
     /**
