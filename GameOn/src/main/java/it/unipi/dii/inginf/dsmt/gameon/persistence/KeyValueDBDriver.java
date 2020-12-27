@@ -1,6 +1,8 @@
 package it.unipi.dii.inginf.dsmt.gameon.persistence;
 
+import it.unipi.dii.inginf.dsmt.gameon.config.ConfigurationParameters;
 import it.unipi.dii.inginf.dsmt.gameon.model.User;
+import it.unipi.dii.inginf.dsmt.gameon.utils.Utils;
 import org.iq80.leveldb.DB;
 import org.iq80.leveldb.DBIterator;
 import org.iq80.leveldb.Options;
@@ -21,25 +23,29 @@ import static org.iq80.leveldb.impl.Iq80DBFactory.bytes;
 public class KeyValueDBDriver {
     private static volatile KeyValueDBDriver instance; //Singleton instance
     private DB db;
-    private final String URL_DATABASE = "database";
+    private String pathDatabase;
 
     /**
      * Private constructor
      */
-    private KeyValueDBDriver() {
+    private KeyValueDBDriver(ConfigurationParameters configurationParameters)
+    {
+        this.pathDatabase = configurationParameters.getPathDatabase();
         openDB();
     }
 
     /**
      * Thread safe getInstance
-     *
-     * @return Always the same instance of a KeyValeDBDriver
+     * @return  Always the same instance of a KeyValeDBDriver
      */
     public static KeyValueDBDriver getInstance() {
-        if (instance == null) {
-            synchronized (KeyValueDBDriver.class) {
-                if (instance == null) {
-                    instance = new KeyValueDBDriver();
+        if (instance == null)
+        {
+            synchronized (KeyValueDBDriver.class)
+            {
+                if (instance == null)
+                {
+                    instance = new KeyValueDBDriver(Utils.readConfigurationParameters());
                 }
             }
         }
@@ -53,7 +59,7 @@ public class KeyValueDBDriver {
         Options options = new Options();
         options.createIfMissing(true);
         try {
-            db = factory.open(new File(URL_DATABASE), options);
+            db = factory.open(new File(pathDatabase), options);
         } catch (IOException e) {
             closeDB();
         }
@@ -74,44 +80,45 @@ public class KeyValueDBDriver {
 
     /**
      * Function that inserts a value given the key
-     *
-     * @param key   Key of the tuple
-     * @param value Value of the tuple
+     * @param key       Key of the tuple
+     * @param value     Value of the tuple
      */
-    private void putValue(String key, String value) {
+    private void putValue (String key, String value)
+    {
         db.put(bytes(key), bytes(value));
     }
 
     /**
      * Function that returns the value given the key
-     *
-     * @param key Key of the tuple
-     * @return A string representation of the value
+     * @param key       Key of the tuple
+     * @return          A string representation of the value
      */
-    private String getValue(String key) {
+    private String getValue (String key)
+    {
         return asString(db.get(bytes(key)));
     }
 
     /**
      * Function that deletes the value given the key
-     *
-     * @param key Key of the tuple
+     * @param key       Key of the tuple
      */
-    private void deleteValue(String key) {
+    private void deleteValue (String key)
+    {
         db.delete(bytes(key));
     }
 
     /**
      * Function that returns the user
-     *
-     * @param username Username of the user
-     * @return The user if he is in the database, otherwise null
+     * @param username      Username of the user
+     * @return              The user if he is in the database, otherwise null
      */
-    public User getUserFromUsername(final String username) {
+    public User getUserFromUsername (final String username)
+    {
         User user = null;
         String password = getValue("user:" + username + ":password");
         // If this user is present in the DB
-        if (password != null) {
+        if (password != null)
+        {
             user = new User(username, password,
                     parseInt(getValue("user:" + username + ":battleShipWins")),
                     parseInt(getValue("user:" + username + ":connectFourWins")));
@@ -121,15 +128,16 @@ public class KeyValueDBDriver {
 
     /**
      * Function that returns checks if it is possible to do the login
-     *
-     * @param username Username to chec
-     * @param password Password to check
-     * @return The User, or null if it's not possible to do the login
+     * @param username      Username to chec
+     * @param password      Password to check
+     * @return              The User, or null if it's not possible to do the login
      */
-    public User login(final String username, final String password) {
+    public User login (final String username, final String password)
+    {
         User user = getUserFromUsername(username);
         // If doesn't exist a User registered with that username, or if the password doesn't match
-        if (user == null || !user.getPassword().equals(password)) {
+        if (user == null || !user.getPassword().equals(password))
+        {
             return null;
         }
         return user;
@@ -137,11 +145,11 @@ public class KeyValueDBDriver {
 
     /**
      * Function that returns if exists a user with this username in the DB
-     *
-     * @param username Username of the user
-     * @return True if exists, otherwise false
+     * @param username      Username of the user
+     * @return              True if exists, otherwise false
      */
-    public boolean isRegistered(final String username) {
+    public boolean isRegistered (final String username)
+    {
         boolean registered = false;
         String value = getValue("user:" + username + ":password");
         if (value != null)
@@ -151,11 +159,11 @@ public class KeyValueDBDriver {
 
     /**
      * Function that is used to register the new user in the DB
-     *
-     * @param username Username of the user
-     * @param password Password of the user
+     * @param username      Username of the user
+     * @param password      Password of the user
      */
-    public void register(final String username, final String password) {
+    public void register (final String username, final String password)
+    {
         // I do all the operations in a batch, for the atomicity property
         try (WriteBatch batch = db.createWriteBatch()) {
             batch.put(bytes("user:" + username + ":password"), bytes(password));
