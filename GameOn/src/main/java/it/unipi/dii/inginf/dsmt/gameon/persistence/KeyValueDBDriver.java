@@ -8,6 +8,9 @@ import org.iq80.leveldb.WriteBatch;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.*;
+
+import static java.lang.Integer.parseInt;
 import static org.iq80.leveldb.impl.Iq80DBFactory.*;
 import static org.iq80.leveldb.impl.Iq80DBFactory.bytes;
 
@@ -23,22 +26,19 @@ public class KeyValueDBDriver {
     /**
      * Private constructor
      */
-    private KeyValueDBDriver()
-    {
+    private KeyValueDBDriver() {
         openDB();
     }
 
     /**
      * Thread safe getInstance
-     * @return  Always the same instance of a KeyValeDBDriver
+     *
+     * @return Always the same instance of a KeyValeDBDriver
      */
     public static KeyValueDBDriver getInstance() {
-        if (instance == null)
-        {
-            synchronized (KeyValueDBDriver.class)
-            {
-                if (instance == null)
-                {
+        if (instance == null) {
+            synchronized (KeyValueDBDriver.class) {
+                if (instance == null) {
                     instance = new KeyValueDBDriver();
                 }
             }
@@ -74,64 +74,62 @@ public class KeyValueDBDriver {
 
     /**
      * Function that inserts a value given the key
-     * @param key       Key of the tuple
-     * @param value     Value of the tuple
+     *
+     * @param key   Key of the tuple
+     * @param value Value of the tuple
      */
-    private void putValue (String key, String value)
-    {
+    private void putValue(String key, String value) {
         db.put(bytes(key), bytes(value));
     }
 
     /**
      * Function that returns the value given the key
-     * @param key       Key of the tuple
-     * @return          A string representation of the value
+     *
+     * @param key Key of the tuple
+     * @return A string representation of the value
      */
-    private String getValue (String key)
-    {
+    private String getValue(String key) {
         return asString(db.get(bytes(key)));
     }
 
     /**
      * Function that deletes the value given the key
-     * @param key       Key of the tuple
+     *
+     * @param key Key of the tuple
      */
-    private void deleteValue (String key)
-    {
+    private void deleteValue(String key) {
         db.delete(bytes(key));
     }
 
     /**
      * Function that returns the user
-     * @param username      Username of the user
-     * @return              The user if he is in the database, otherwise null
+     *
+     * @param username Username of the user
+     * @return The user if he is in the database, otherwise null
      */
-    public User getUserFromUsername (final String username)
-    {
+    public User getUserFromUsername(final String username) {
         User user = null;
         String password = getValue("user:" + username + ":password");
         // If this user is present in the DB
-        if (password != null)
-        {
+        if (password != null) {
             user = new User(username, password,
-                    Integer.parseInt(getValue("user:" + username + ":battleShipWins")),
-                    Integer.parseInt(getValue("user:" + username + ":connectFourWins")));
+                    parseInt(getValue("user:" + username + ":battleShipWins")),
+                    parseInt(getValue("user:" + username + ":connectFourWins")));
         }
         return user;
     }
 
     /**
      * Function that returns checks if it is possible to do the login
-     * @param username      Username to chec
-     * @param password      Password to check
-     * @return              The User, or null if it's not possible to do the login
+     *
+     * @param username Username to chec
+     * @param password Password to check
+     * @return The User, or null if it's not possible to do the login
      */
-    public User login (final String username, final String password)
-    {
+    public User login(final String username, final String password) {
         User user = getUserFromUsername(username);
         // If doesn't exist a User registered with that username, or if the password doesn't match
-        if (user == null || !user.getPassword().equals(password))
-        {
+        if (user == null || !user.getPassword().equals(password)) {
             return null;
         }
         return user;
@@ -139,11 +137,11 @@ public class KeyValueDBDriver {
 
     /**
      * Function that returns if exists a user with this username in the DB
-     * @param username      Username of the user
-     * @return              True if exists, otherwise false
+     *
+     * @param username Username of the user
+     * @return True if exists, otherwise false
      */
-    public boolean isRegistered (final String username)
-    {
+    public boolean isRegistered(final String username) {
         boolean registered = false;
         String value = getValue("user:" + username + ":password");
         if (value != null)
@@ -153,11 +151,11 @@ public class KeyValueDBDriver {
 
     /**
      * Function that is used to register the new user in the DB
-     * @param username      Username of the user
-     * @param password      Password of the user
+     *
+     * @param username Username of the user
+     * @param password Password of the user
      */
-    public void register (final String username, final String password)
-    {
+    public void register(final String username, final String password) {
         // I do all the operations in a batch, for the atomicity property
         try (WriteBatch batch = db.createWriteBatch()) {
             batch.put(bytes("user:" + username + ":password"), bytes(password));
@@ -204,4 +202,88 @@ public class KeyValueDBDriver {
             closeDB();
         }
     }
+
+    /**
+     * Function that returns the ranking for Battleship
+     *
+     * @return  a sorted HashMap where the key is the username and the value is the number of wins
+     */
+    public HashMap<String, Integer> getBattleshipRanking() {
+        return getRanking("battleShip");
+    }
+
+    /**
+     * Function that returns the ranking for Connect Four
+     *
+     * @return  a sorted HashMap where the key is the username and the value is the number of wins
+     */
+    public HashMap<String, Integer> getConnectFourRanking() {
+        return getRanking("connectFour");
+    }
+
+    /**
+     * Function that returns the ranking for the game passed as a parameter
+     *
+     * @param gameName  name of the game to get the ranking of
+     * @return  a sorted HashMap where the key is the username and the value is the number of wins
+     */
+    private HashMap<String, Integer> getRanking(String gameName) {
+        HashMap<String, Integer> usersWins = new HashMap<>();
+        String gameWins = gameName + "Wins";
+
+        //Iterate DB Content
+        try (DBIterator iterator = db.iterator()) {
+            for (iterator.seekToFirst(); iterator.hasNext(); iterator.next()) {
+                String key = asString(iterator.peekNext().getKey());
+
+                // Check if it is the game wins record
+                if (key.contains(gameWins)) {
+                    String userWins = asString(iterator.peekNext().getValue());
+
+                    // user:'username':'game'Wins" -> parts[1] = username
+                    String[] parts = key.split(":");
+                    final String username = parts[1];
+
+                    usersWins.put(username, parseInt(userWins));
+
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // There is no direct way to sort a HashMap by values, see sortHashMap implementation
+        return sortHashMap(usersWins);
+    }
+
+    /**
+     * Function that sorts an HashMap on descending order on values of Integer types
+     * Code adapted from: https://www.java67.com/2015/01/how-to-sort-hashmap-in-java-based-on.html#ixzz6hp389MJ5
+     * @param hashMap   HashMap to be sorted in descending order on values
+     * @return  a sorted HashMap
+     */
+    public static HashMap<String, Integer> sortHashMap(HashMap<String, Integer> hashMap) {
+        Comparator<Map.Entry<String, Integer>> valueComparator = (o1, o2) -> {
+            Integer i1 = o1.getValue();
+            Integer i2 = o2.getValue();
+            return i2.compareTo(i1);
+        };
+
+        Set<Map.Entry<String, Integer>> entries = hashMap.entrySet();
+
+        // Sort method needs a List, so let's first convert Set to List in Java
+        List<Map.Entry<String, Integer>> listOfEntries = new ArrayList<>(entries);
+
+        // sorting HashMap by values using comparator
+        listOfEntries.sort(valueComparator);
+        HashMap<String, Integer> sortedByValue = new LinkedHashMap<>(listOfEntries.size());
+
+        // copying entries from List to Map
+        for (Map.Entry<String, Integer> entry : listOfEntries) {
+            sortedByValue.put(entry.getKey(), entry.getValue());
+        }
+
+        return sortedByValue;
+    }
+
 }
