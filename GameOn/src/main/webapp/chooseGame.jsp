@@ -25,7 +25,7 @@
             out.println("Online users: ");
             SessionManager sessionManager =
                     (SessionManager) session.getServletContext().getAttribute("sessionManager");
-            for (User user: sessionManager.getOnlineUsers())
+            for (User user: sessionManager.getAllOnlineUsers())
             {
                 out.println(user.getUsername());
             }

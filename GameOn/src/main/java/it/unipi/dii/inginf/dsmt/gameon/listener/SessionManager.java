@@ -89,11 +89,10 @@ public class SessionManager implements ServletContextListener,
     }
 
     /**
-     * Function that returns the list of online users
+     * Function that returns a list of all online users
      * @return      A list of users
      */
-    public List<User> getOnlineUsers() {
-        System.out.println(activeSessions);
+    public List<User> getAllOnlineUsers() {
         synchronized (activeSessions)
         {
             List<User> onlineUsers = new ArrayList();
@@ -108,6 +107,50 @@ public class SessionManager implements ServletContextListener,
                 }
             }
             return onlineUsers;
+        }
+    }
+
+    /**
+     * Function that returns the list of the online users waiting for a Connected Four game
+     * @return  The list of the users
+     */
+    public List<User> getOnlineUsersConnectedFour ()
+    {
+        return getOnlineUsers("connectedFour");
+    }
+
+    /**
+     * Function that returns the list of the online users waiting for a Battleship game
+     * @return  The list of the users
+     */
+    public List<User> getOnlineUsersBattleShip ()
+    {
+        return getOnlineUsers("battleShip");
+    }
+
+    /**
+     * Function that returns a list of the users online for a specific game
+     * @param gameName      Name of the game
+     * @return              List of the users
+     */
+    private List<User> getOnlineUsers (String gameName)
+    {
+        synchronized (activeSessions)
+        {
+            List<User> users = new ArrayList<>();
+            Iterator<HttpSession> iterator = activeSessions.iterator();
+            while (iterator.hasNext())
+            {
+                HttpSession session = iterator.next();
+                User user = (User) session.getAttribute("loggedUser");
+                String name = (String) session.getAttribute("gameName");
+                // If this is a session of a logged user and he is in the waiting room of this game
+                if (user != null && gameName.equals(name))
+                {
+                    users.add(user);
+                }
+            }
+            return users;
         }
     }
 

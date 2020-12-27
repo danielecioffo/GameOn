@@ -4,7 +4,7 @@ package it.unipi.dii.inginf.dsmt.gameon.model;
  * Bean for the User
  */
 public class User {
-    private String username;
+    private String username; // identifier
     private String password;
     private int battleShipWins;
     private int connectFourWins;

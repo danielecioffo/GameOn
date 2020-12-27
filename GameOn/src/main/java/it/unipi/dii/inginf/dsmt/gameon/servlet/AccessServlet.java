@@ -45,7 +45,7 @@ public class AccessServlet extends HttpServlet {
                 if (user != null)
                 {
                     HttpSession session = request.getSession();
-                    session.setAttribute("loggedUser",user);
+                    session.setAttribute("loggedUser", user);
                     Utils.goToPage("chooseGame.jsp", request, response);
                 }
                 else{
