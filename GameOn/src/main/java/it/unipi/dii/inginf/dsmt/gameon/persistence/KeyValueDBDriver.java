@@ -253,7 +253,6 @@ public class KeyValueDBDriver {
                     final String username = parts[1];
 
                     usersWins.put(username, parseInt(userWins));
-
                 }
             }
         } catch (IOException e) {
@@ -293,5 +292,4 @@ public class KeyValueDBDriver {
 
         return sortedByValue;
     }
-
 }
