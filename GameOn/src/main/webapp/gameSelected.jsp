@@ -32,7 +32,10 @@
 <h1 class="center-text">Let's play:
 <%
     String gameName = (String) session.getAttribute("gameName");
-    out.println(gameName + "!");
+    if (gameName.equals("connectedFour"))
+        out.println("Connect Four!");
+    else if (gameName.equals("battleShip"))
+        out.println("Battle Ship!");
 %>
 </h1>
 <h2 class="center-text">Waiting for a match</h2>

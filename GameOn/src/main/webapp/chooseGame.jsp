@@ -23,15 +23,6 @@
         <button name="battleShipButton" value="buttleShip" class="mainButton">Battle Ship</button>
         <button name="connectedFourButton" value="connectFour" class="mainButton">Connect Four</button>
         </form>
-        <%
-            out.println("Online users: ");
-            SessionManager sessionManager =
-                    (SessionManager) session.getServletContext().getAttribute("sessionManager");
-            for (User user: sessionManager.getAllOnlineUsers())
-            {
-                out.println(user.getUsername());
-            }
-        %>
     </div>
 </body>
 </html>
