@@ -1,4 +1,5 @@
 package it.unipi.dii.inginf.dsmt.gameon.servlet;
+import it.unipi.dii.inginf.dsmt.gameon.HelloServlet;
 import it.unipi.dii.inginf.dsmt.gameon.listener.SessionManager;
 import it.unipi.dii.inginf.dsmt.gameon.model.User;
 import it.unipi.dii.inginf.dsmt.gameon.persistence.KeyValueDBDriver;
@@ -35,13 +36,13 @@ public class ChooseGameServlet extends HttpServlet{
 
         if(request.getParameter("battleShipButton") != null){
             HttpSession session = request.getSession();
-            String gameName = "Buttle Ship";
+            String gameName = "battleShip";
             session.setAttribute("gameName", gameName);
             requestDispatcher = request.getRequestDispatcher("gameSelected.jsp");
             requestDispatcher.include(request, response);
         }else{
             HttpSession session = request.getSession();
-            String gameName = "Connect Four";
+            String gameName = "connectedFour";
             session.setAttribute("gameName", gameName);
             requestDispatcher = request.getRequestDispatcher("gameSelected.jsp");
             requestDispatcher.include(request, response);
@@ -49,14 +50,20 @@ public class ChooseGameServlet extends HttpServlet{
         HttpSession session = request.getSession();
         SessionManager sessionManager =
                 (SessionManager) session.getServletContext().getAttribute("sessionManager");
-        List<User> users = sessionManager.getAllOnlineUsers();
+        List<User> users = new ArrayList<>();
+        System.out.println(session.getAttribute("gameName"));
+        if(session.getAttribute("gameName").equals("battleShip"))
+            users = sessionManager.getOnlineUsersBattleShip();
+        else
+            users = sessionManager.getOnlineUsersConnectedFour();
+        System.out.println(users);
         List<String> list = new ArrayList<>();
         for (User k: users
              ) {
             list.add(k.getUsername());
         }
         request.setAttribute("usrs", list);
-        if(session.getAttribute("gameName").equals("Buttle Ship"))
+        if(session.getAttribute("gameName").equals("battleShip"))
             request.setAttribute("ranking", keyValueDBDriver.getBattleshipRanking());
         else
             request.setAttribute("ranking", keyValueDBDriver.getConnectFourRanking());
