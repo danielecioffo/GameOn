@@ -19,8 +19,10 @@
         <div class="imgcontainer">
             <img src='resources/images/icon.png' alt="App Icon" width="75%">
         </div>
-        <button name="battleShipButton" class="mainButton" onclick="window.location.href='gameSelected.jsp'">Battle Ship</button>
-        <button name="connectedFourButton" class="mainButton" onclick="window.location.href='gameSelected.jsp'">Connect Four</button>
+        <form action="chooseGame-servlet" method="post">
+        <button name="battleShipButton" value="buttleShip" class="mainButton">Battle Ship</button>
+        <button name="connectedFourButton" value="connectFour" class="mainButton">Connect Four</button>
+        </form>
         <%
             out.println("Online users: ");
             SessionManager sessionManager =
