@@ -128,7 +128,7 @@ public class KeyValueDBDriver {
 
     /**
      * Function that returns checks if it is possible to do the login
-     * @param username      Username to chec
+     * @param username      Username to check
      * @param password      Password to check
      * @return              The User, or null if it's not possible to do the login
      */
@@ -213,29 +213,30 @@ public class KeyValueDBDriver {
 
     /**
      * Function that returns the ranking for Battleship
-     *
+     * @param limit number of records to be returned
      * @return  a sorted HashMap where the key is the username and the value is the number of wins
      */
-    public HashMap<String, Integer> getBattleshipRanking() {
-        return getRanking("battleShip");
+    public HashMap<String, Integer> getBattleshipRanking(int limit) {
+        return getRanking("battleShip", limit);
     }
 
     /**
      * Function that returns the ranking for Connect Four
-     *
+     * @param limit number of records to be returned
      * @return  a sorted HashMap where the key is the username and the value is the number of wins
      */
-    public HashMap<String, Integer> getConnectFourRanking() {
-        return getRanking("connectFour");
+    public HashMap<String, Integer> getConnectFourRanking(int limit) {
+        return getRanking("connectFour", limit);
     }
 
     /**
      * Function that returns the ranking for the game passed as a parameter
      *
      * @param gameName  name of the game to get the ranking of
+     * @param limit number of records to be returned
      * @return  a sorted HashMap where the key is the username and the value is the number of wins
      */
-    private HashMap<String, Integer> getRanking(String gameName) {
+    private HashMap<String, Integer> getRanking(String gameName, int limit) {
         HashMap<String, Integer> usersWins = new HashMap<>();
         String gameWins = gameName + "Wins";
 
@@ -260,16 +261,17 @@ public class KeyValueDBDriver {
         }
 
         // There is no direct way to sort a HashMap by values, see sortHashMap implementation
-        return sortHashMap(usersWins);
+        return sortHashMap(usersWins, limit);
     }
 
     /**
      * Function that sorts an HashMap on descending order on values of Integer types
      * Code adapted from: https://www.java67.com/2015/01/how-to-sort-hashmap-in-java-based-on.html#ixzz6hp389MJ5
      * @param hashMap   HashMap to be sorted in descending order on values
+     * @param limit number of records to be returned
      * @return  a sorted HashMap
      */
-    public static HashMap<String, Integer> sortHashMap(HashMap<String, Integer> hashMap) {
+    public static HashMap<String, Integer> sortHashMap(HashMap<String, Integer> hashMap, int limit) {
         Comparator<Map.Entry<String, Integer>> valueComparator = (o1, o2) -> {
             Integer i1 = o1.getValue();
             Integer i2 = o2.getValue();
@@ -285,9 +287,12 @@ public class KeyValueDBDriver {
         listOfEntries.sort(valueComparator);
         HashMap<String, Integer> sortedByValue = new LinkedHashMap<>(listOfEntries.size());
 
-        // copying entries from List to Map
+        // copying entries from List to Map with limited records
+        int i = 0;
         for (Map.Entry<String, Integer> entry : listOfEntries) {
+            if(i >= limit) break;
             sortedByValue.put(entry.getKey(), entry.getValue());
+            i++;
         }
 
         return sortedByValue;

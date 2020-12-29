@@ -50,7 +50,7 @@ public class ChooseGameServlet extends HttpServlet{
         HttpSession session = request.getSession();
         SessionManager sessionManager =
                 (SessionManager) session.getServletContext().getAttribute("sessionManager");
-        List<User> users = new ArrayList<>();
+        List<User> users;
         System.out.println(session.getAttribute("gameName"));
         if(session.getAttribute("gameName").equals("battleShip"))
             users = sessionManager.getOnlineUsersBattleShip();
@@ -64,9 +64,9 @@ public class ChooseGameServlet extends HttpServlet{
         }
         request.setAttribute("usrs", list);
         if(session.getAttribute("gameName").equals("battleShip"))
-            request.setAttribute("ranking", keyValueDBDriver.getBattleshipRanking());
+            request.setAttribute("ranking", keyValueDBDriver.getBattleshipRanking(5));  // cambiare con parametro da ParametriDiConfigurazione
         else
-            request.setAttribute("ranking", keyValueDBDriver.getConnectFourRanking());
+            request.setAttribute("ranking", keyValueDBDriver.getConnectFourRanking(5)); // cambiare con parametro da ParametriDiConfigurazione
         request.getRequestDispatcher("/gameSelected.jsp").forward(request, response);
     }
 }
