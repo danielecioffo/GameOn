@@ -115,9 +115,9 @@ public class SessionManager implements ServletContextListener,
      * Function that returns the list of the online users waiting for a Connected Four game
      * @return  The list of the users
      */
-    public List<User> getOnlineUsersConnectedFour ()
+    public List<User> getOnlineUsersConnectFour ()
     {
-        return getOnlineUsers("connectedFour");
+        return getOnlineUsers("connectFour");
     }
 
     /**

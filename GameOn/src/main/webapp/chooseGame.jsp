@@ -21,7 +21,7 @@
         </div>
         <form action="chooseGame-servlet" method="post">
         <button name="battleShipButton" value="buttleShip" class="mainButton">Battle Ship</button>
-        <button name="connectedFourButton" value="connectFour" class="mainButton">Connect Four</button>
+        <button name="connectFourButton" value="connectFour" class="mainButton">Connect Four</button>
         </form>
     </div>
 </body>

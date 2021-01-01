@@ -42,7 +42,7 @@ public class ChooseGameServlet extends HttpServlet{
             requestDispatcher.include(request, response);
         }else{
             HttpSession session = request.getSession();
-            String gameName = "connectedFour";
+            String gameName = "connectFour";
             session.setAttribute("gameName", gameName);
             requestDispatcher = request.getRequestDispatcher("gameSelected.jsp");
             requestDispatcher.include(request, response);
@@ -55,7 +55,7 @@ public class ChooseGameServlet extends HttpServlet{
         if(session.getAttribute("gameName").equals("battleShip"))
             users = sessionManager.getOnlineUsersBattleShip();
         else
-            users = sessionManager.getOnlineUsersConnectedFour();
+            users = sessionManager.getOnlineUsersConnectFour();
         System.out.println(users);
         List<String> list = new ArrayList<>();
         for (User k: users
