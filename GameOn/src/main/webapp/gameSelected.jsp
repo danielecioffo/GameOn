@@ -63,7 +63,13 @@
             <button class="mainButton" onclick = "window.location.href='chooseGame.jsp'">Go back to List's Games</button>
         </div>
     </div>
-    <ul id="gameRequestList"></ul>
+    <h2>Game requests received: </h2>
+    <table id="gameRequests">
+        <tr>
+            <th>Username</th>
+            <th>Accept</th>
+        </tr>
+    </table>
     <script src="resources/javascript/webSocket.js"></script>
     <script>
         var username = '<%= myself.getUsername() %>';
@@ -76,19 +82,38 @@
             }
         }
 
+        function sendGameRequestAccepted (to_username) {
+            sendWebSocket(new Message(0, 'game_request_accepted', null, username, to_username));
+            window.location.href = "connectFour.jsp?opponent="+to_username;
+        }
+
         /**
          * Override of the onMessage function written in webSocket.js
          * @param event     The event that leads to this handler
          */
         ws.onmessage = function (event){
             var jsonString = JSON.parse(event.data);
+            var sender = jsonString.sender;
             if (jsonString.type === 'game_request') // I have received a game request
             {
-                var sender = jsonString.sender;
-                var node = document.createElement("LI");
-                var textNode = document.createTextNode(sender + " wanna play with you!");
-                node.appendChild(textNode);
-                document.getElementById("gameRequestList").appendChild(node);
+                var tr = document.createElement("TR");
+
+                var tdUsername = document.createElement("TD");
+                tdUsername.textContent = sender;
+                tr.appendChild(tdUsername);
+
+                var button = document.createElement("BUTTON");
+                button.textContent = "Accept";
+                button.onclick = function() { sendGameRequestAccepted(sender); }
+                var tdButton = document.createElement("TD");
+                tdButton.appendChild(button);
+                tr.appendChild(tdButton);
+
+                document.getElementById("gameRequests").appendChild(tr);
+            }
+            else if (jsonString.type === 'game_request_accepted')
+            {
+                window.location.href = "connectFour.jsp?opponent="+sender;
             }
         };
     </script>

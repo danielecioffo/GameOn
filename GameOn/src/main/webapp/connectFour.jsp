@@ -7,6 +7,10 @@
         <link type="text/css" rel="stylesheet" href="resources/css/connectFourStyle.css">
     </head>
     <body>
+        <%
+            String opponent = request.getParameter("opponent");
+            String username = request.getParameter("username");
+        %>
         <div class="grid-container">
             <div class="header">
                 <button type="button" onclick = "window.location.href='./logout-servlet'">Logout</button>
