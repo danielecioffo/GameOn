@@ -1,4 +1,10 @@
-<%@ page import="it.unipi.dii.inginf.dsmt.gameon.model.User" %>
+<%@ page import="it.unipi.dii.inginf.dsmt.gameon.model.User" %><%--
+  Created by IntelliJ IDEA.
+  User: francesco
+  Date: 24/12/20
+  Time: 17:14
+  To change this template use File | Settings | File Templates.
+--%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <html>
@@ -63,7 +69,8 @@
             <button class="mainButton" onclick = "window.location.href='chooseGame.jsp'">Go back to List's Games</button>
         </div>
     </div>
-    <ul id="gameRequestList"></ul>
+    <ul id="gameRequestList">
+    </ul>
     <script src="resources/javascript/webSocket.js"></script>
     <script>
         var username = '<%= myself.getUsername() %>';
@@ -75,11 +82,6 @@
                 sendWebSocket(new Message(0, 'game_request', null, username, to_username))
             }
         }
-
-        /**
-         * Override of the onMessage function written in webSocket.js
-         * @param event     The event that leads to this handler
-         */
         ws.onmessage = function (event){
             var jsonString = JSON.parse(event.data);
             if (jsonString.type === 'game_request') // I have received a game request

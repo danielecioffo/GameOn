@@ -1,0 +1,13 @@
+.center-text {
+    text-align: center;
+}
+
+.imgcontainer {
+    text-align: center;
+    margin: 24px 0 12px 0;
+}
+
+img.icon {
+    width: 40%;
+    border-radius: 50%;
+}

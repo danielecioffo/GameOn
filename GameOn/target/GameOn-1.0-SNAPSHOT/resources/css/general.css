@@ -1,0 +1,13 @@
+.mainButton {
+    background-color: #3399ff;
+    color: white;
+    padding: 14px 20px;
+    margin-top: 8px;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+}
+
+.mainButton:hover {
+    opacity: 0.8;
+}
