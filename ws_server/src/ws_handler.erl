@@ -41,7 +41,8 @@ websocket_handle ({text, Text}, State) ->
   if
     %% Registration of this process with the atom of the username, this is useful for contacting him from other processes
     Type == username_registration -> register(erlang:binary_to_atom(maps:get(<<"data">>, Map)), self());
-    (Type == game_request) or (Type == game_request_accepted) ->
+    (Type == game_request) or (Type == game_request_accepted)
+      or (Type == connect_four_move) ->
       Receiver = erlang:binary_to_atom(maps:get(<<"receiver">>, Map)),
       Receiver ! Text; %% send the JSON structure to the receiver
     true -> ok

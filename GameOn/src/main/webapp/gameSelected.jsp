@@ -86,7 +86,7 @@
         function sendGameRequestAccepted (to_username) {
             sendWebSocket(new Message(0, 'game_request_accepted', null, username, to_username));
             if (gameName === "connectFour")
-                window.location.href = "connectFour.jsp?opponent="+to_username;
+                window.location.href = "connectFour.jsp?color=red&opponent="+to_username;
         }
 
         /**
@@ -116,7 +116,7 @@
             else if (jsonString.type === 'game_request_accepted')
             {
                 if (gameName === "connectFour")
-                    window.location.href = "connectFour.jsp?opponent="+sender;
+                    window.location.href = "connectFour.jsp?color=yellow&opponent="+sender;
             }
         };
     </script>
