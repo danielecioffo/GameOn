@@ -135,11 +135,11 @@ input[type=text] {
 
 .chatbox {
     background-color: white;
-    text-align: left;
     border:1px solid #ACD8F0;
     width: 90%;
     min-height: 170px;
     margin: 0 auto;
+    overflow: auto;
 }
 
 .left-border {

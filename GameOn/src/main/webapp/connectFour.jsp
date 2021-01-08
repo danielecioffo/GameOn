@@ -6,6 +6,7 @@
         <title>Connect Four</title>
         <link rel="icon" href="resources/images/ConnectFour.png">
         <link type="text/css" rel="stylesheet" href="resources/css/connectFourStyle.css">
+        <link type="text/css" rel="stylesheet" href="resources/css/general.css">
     </head>
     <%
         User myself = (User) session.getAttribute("loggedUser");
@@ -77,7 +78,7 @@
             <div class="right">
                 <h1>Connect Four</h1>
                 <button class="mainButton" type="button" onclick="">Play</button>
-                <button class ="mainButton" type="button" onclick="">Surrender</button>
+                <button class ="mainButton" type="button" onclick="surrender()">Surrender</button>
             </div>
 
             <div class="footer">
@@ -85,7 +86,6 @@
                     <p class="title">Chatbox</p>
 
                     <div id="chatBox" class="chatbox">
-                        <ul id="chatList"></ul>
                     </div>
 
                     <input name="usermsg" type="text" id="usermsg" placeholder="Type a message...">
@@ -128,12 +128,29 @@
                 }
                 else if (jsonString.type === 'chat_message')
                 {
-                    let li = document.createElement("LI");
+                    let p = document.createElement("P");
                     let receivedMessage = jsonString.data;
-                    li.appendChild(document.createTextNode(sender + ": " + receivedMessage));
-                    chatList.appendChild(li);
+                    let text = document.createTextNode(sender + ": " + receivedMessage);
+                    p.appendChild(text);
+                    p.className = "message-left";
+                    chatBox.appendChild(p);
+                }
+                else if (jsonString.type === 'surrender') //the opponent surrender
+                {
+                    alert("The opponent has surrendered!");
+                    // TODO Go to the waiting room, but from a servlet
+                }
+                else if (jsonString.type === 'receiver_disconnected')
+                {
+                    alert("Opponent disconnected!");
                 }
             };
+
+            function surrender ()
+            {
+                let message = new Message(0, "surrender", null, username, opponentUsername);
+                sendWebSocket(message);
+            }
         </script>
         <script type="text/javascript" src="resources/javascript/chat.js"></script>
         <script type="text/javascript" src="resources/javascript/connectFour.js"></script>

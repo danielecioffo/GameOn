@@ -43,7 +43,15 @@ websocket_handle ({text, Text}, State) ->
     Type == username_registration -> register(erlang:binary_to_atom(maps:get(<<"data">>, Map)), self());
     true ->
       Receiver = erlang:binary_to_atom(maps:get(<<"receiver">>, Map)),
-      Receiver ! Text %% send the JSON structure to the receiver
+      ReceiverPID = whereis(Receiver),
+      if
+        ReceiverPID == undefined -> %% The receiver is disconnected
+          Sender = erlang:binary_to_atom(maps:get(<<"sender">>, Map)),
+          Response = jsx:encode(#{<<"code">> => 1, <<"type">> => <<"receiver_disconnected">>, <<"data">> => <<>>,
+            <<"sender">> => <<>>, <<"receiver">> => <<>>}),
+          Sender ! Response;
+        true -> Receiver ! Text %% send the JSON structure to the receiver
+      end
   end,
   {ok, State}.
 
@@ -63,4 +71,5 @@ websocket_info(Info, State) ->
 %% remote -> The client close the connection
 terminate (TerminateReason, _Req, _State) ->
   io:format("Terminate reason: ~p\n", [TerminateReason]),
+  %% I need to inform the opponent, if i am in a game
   ok.
