@@ -7,7 +7,10 @@
         <link rel="icon" href="resources/images/ConnectFour.png">
         <link type="text/css" rel="stylesheet" href="resources/css/connectFourStyle.css">
     </head>
-    <% User myself = (User) session.getAttribute("loggedUser"); %>
+    <%
+        User myself = (User) session.getAttribute("loggedUser");
+        String opponent = request.getParameter("opponent");
+    %>
     <body>
         <div class="grid-container">
             <div class="header">
@@ -81,12 +84,12 @@
                 <div class="wrapper">
                     <p class="title">Chatbox</p>
 
-                    <div class="chatbox"></div>
+                    <div id="chatBox" class="chatbox">
+                        <ul id="chatList"></ul>
+                    </div>
 
-                    <form name="message" action="">
-                        <input name="usermsg" type="text" id="usermsg" placeholder="Type a message..." required/>
-                        <button class="mainButton" type="submit">Send</button>
-                    </form>
+                    <input name="usermsg" type="text" id="usermsg" placeholder="Type a message...">
+                    <button id="sendButton" class="mainButton">Send</button>
                 </div>
             </div>
         </div>
@@ -94,7 +97,45 @@
         <script>
             const username = '<%= myself.getUsername() %>';
             initWebSocket(username);
+            const opponentUsername = '<% out.print(opponent);%>';
+
+            /**
+             * Override of the onMessage function written in webSocket.js
+             * @param event     The event that leads to this handler
+             */
+            ws.onmessage = function (event){
+                var jsonString = JSON.parse(event.data);
+                var sender = jsonString.sender;
+                if (jsonString.type === 'connect_four_move') {
+                    console.log(sender + " made their move.");
+
+                    const row = jsonString.data.row;
+                    const column = jsonString.data.column;
+
+                    const localCell = rows[row][column];
+                    localCell.classList.add(opponentColor);
+
+                    checkStatusOfGame(localCell);
+
+                    yourTurn = !yourTurn;
+
+                    if (!gameIsLive) {
+                        console.log(winningText);
+
+                        //TODO crea popup con stampato winningText e ritorna dopo tot secondi alla stanza di attesa
+                        //TODO aggiungi eventuale vittoria al DB
+                    }
+                }
+                else if (jsonString.type === 'chat_message')
+                {
+                    let li = document.createElement("LI");
+                    let receivedMessage = jsonString.data;
+                    li.appendChild(document.createTextNode(sender + ": " + receivedMessage));
+                    chatList.appendChild(li);
+                }
+            };
         </script>
+        <script type="text/javascript" src="resources/javascript/chat.js"></script>
         <script type="text/javascript" src="resources/javascript/connectFour.js"></script>
     </body>
 </html>

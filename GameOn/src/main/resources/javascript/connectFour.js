@@ -238,35 +238,6 @@ function sendMove(to_username, cell) {
     sendWebSocket(new Message(0, 'connect_four_move', obj, username, to_username));
 }
 
-/**
- * Override of the onMessage function written in webSocket.js
- * @param event     The event that leads to this handler
- */
-ws.onmessage = function (event){
-    var jsonString = JSON.parse(event.data);
-    var sender = jsonString.sender;
-    if (jsonString.type === 'connect_four_move') {
-        console.log(sender + " made their move.");
-
-        const row = jsonString.data.row;
-        const column = jsonString.data.column;
-
-        const localCell = rows[row][column];
-        localCell.classList.add(opponentColor);
-
-        checkStatusOfGame(localCell);
-
-        yourTurn = !yourTurn;
-
-        if (!gameIsLive) {
-            console.log(winningText);
-
-            //TODO crea popup con stampato winningText e ritorna dopo tot secondi alla stanza di attesa
-            //TODO aggiungi eventuale vittoria al DB
-        }
-    }
-};
-
 
 // Event Handlers
 const handleCellMouseOver = (e) => {
