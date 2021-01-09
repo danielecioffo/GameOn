@@ -26,7 +26,7 @@
 <h1 class="center-text">Let's play:
 <%
     String gameName = (String) session.getAttribute("gameName");
-    if (gameName.equals("connectedFour"))
+    if (gameName.equals("connectFour"))
         out.println("Connect Four!");
     else if (gameName.equals("battleShip"))
         out.println("Battle Ship!");
@@ -73,6 +73,7 @@
     <script src="resources/javascript/webSocket.js"></script>
     <script>
         var username = '<%= myself.getUsername() %>';
+        var gameName = '<% out.print(gameName);%>';
         initWebSocket(username);
         function sendGameRequest (to_username) // send a game request to this user
         {
@@ -84,7 +85,8 @@
 
         function sendGameRequestAccepted (to_username) {
             sendWebSocket(new Message(0, 'game_request_accepted', null, username, to_username));
-            window.location.href = "connectFour.jsp?opponent="+to_username;
+            if (gameName === "connectFour")
+                window.location.href = "connectFour.jsp?color=red&opponent="+to_username;
         }
 
         /**
@@ -113,7 +115,8 @@
             }
             else if (jsonString.type === 'game_request_accepted')
             {
-                window.location.href = "connectFour.jsp?opponent="+sender;
+                if (gameName === "connectFour")
+                    window.location.href = "connectFour.jsp?color=yellow&opponent="+sender;
             }
         };
     </script>

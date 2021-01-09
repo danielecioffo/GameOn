@@ -98,6 +98,8 @@
             const username = '<%= myself.getUsername() %>';
             initWebSocket(username);
             const opponentUsername = '<% out.print(opponent);%>';
+            // Send a message to register who is the opponent
+            sendWebSocket(new Message(0, "opponent_registration", opponentUsername, username, null));
 
             /**
              * Override of the onMessage function written in webSocket.js
@@ -140,9 +142,10 @@
                     alert("The opponent has surrendered!");
                     // TODO Go to the waiting room, but from a servlet
                 }
-                else if (jsonString.type === 'receiver_disconnected')
+                else if (jsonString.type === 'opponent_disconnected')
                 {
                     alert("Opponent disconnected!");
+                    // TODO Go to the waiting room, using a servlet
                 }
             };
 

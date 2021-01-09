@@ -24,19 +24,17 @@ if (!("WebSocket" in window)) {
  * This function initializes the web socket
  * @param username  Username of the user, needed for the registration
  */
-function initWebSocket (username)
-{
+function initWebSocket (username) {
     ws = new WebSocket("ws://localhost:8090/ws");
-    ws.onopen = function(event) {
+    ws.onopen = function (event) {
         console.log('Connected');
         // At the beginning, send a message for registering the username
-        ws.send(JSON.stringify(new Message (0, "username_registration", username, username, null)));
+        ws.send(JSON.stringify(new Message(0, "username_registration", username, username, null)));
     };
     ws.onmessage = function (event) {
         console.log(event.data);
     }
-    ws.onclose = function()
-    {
+    ws.onclose = function () {
         console.log('Connection closed');
     };
 }
@@ -47,8 +45,10 @@ function initWebSocket (username)
  */
 function sendWebSocket(message)
 {
-    ws.send(JSON.stringify(message));
-    console.log('Message sent');
+    waitForSocketConnection(ws, function(){
+        ws.send(JSON.stringify(message));
+        console.log('Message sent');
+    });
 }
 
 /**
@@ -57,4 +57,26 @@ function sendWebSocket(message)
 function closeWebSocket ()
 {
     ws.close();
+}
+
+/**
+ * Function used to make the function wait until the connection is made
+ * @param socket    The WebSocket
+ * @param callback  The function to be performed
+ */
+function waitForSocketConnection(socket, callback) {
+    setTimeout
+    (
+        function () {
+            if (socket.readyState === 1) {
+                // Connection made
+                if (callback != null){
+                    callback();
+                }
+            }
+            else {
+                waitForSocketConnection(socket, callback);
+            }
+        }, 5 // wait 5 millisecond for the connection
+    );
 }

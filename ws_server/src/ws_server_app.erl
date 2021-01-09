@@ -17,6 +17,7 @@ start(_StartType, _StartArgs) ->
         [{port, 8090}],
         #{env => #{dispatch => Dispatch}}
     ),
+    ets:new(matches, [public, set, named_table]), %% Public table that will store all the matches => (UserPID, OpponentUsername)
     ws_server_sup:start_link().
 
 stop(_State) ->

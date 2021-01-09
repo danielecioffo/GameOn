@@ -38,19 +38,24 @@ websocket_handle ({text, Text}, State) ->
   Map = jsx:decode(Text, [return_maps]), %% Every message is a JSON text
   %% JSX work with binary data!
   Type = erlang:binary_to_atom(maps:get(<<"type">>, Map)), %% << ... >> is the syntax for bit string, we cast it into an atom
+  Sender = erlang:binary_to_atom(maps:get(<<"sender">>, Map)),
   if
     %% Registration of this process with the atom of the username, this is useful for contacting him from other processes
     Type == username_registration -> register(erlang:binary_to_atom(maps:get(<<"data">>, Map)), self());
+    Type == opponent_registration ->
+      %% Each user register the opponent in the ETS table "matches"
+      %% We save directly {UserPID, opponentUsername} because on the terminate function we can't lookup with the registered name
+      ets:insert(matches, {whereis(Sender), erlang:binary_to_atom(maps:get(<<"data">>, Map))});
     true ->
       Receiver = erlang:binary_to_atom(maps:get(<<"receiver">>, Map)),
       ReceiverPID = whereis(Receiver),
       if
         ReceiverPID == undefined -> %% The receiver is disconnected
-          Sender = erlang:binary_to_atom(maps:get(<<"sender">>, Map)),
-          Response = jsx:encode(#{<<"code">> => 1, <<"type">> => <<"receiver_disconnected">>, <<"data">> => <<>>,
+          Response = jsx:encode(#{<<"code">> => 1, <<"type">> => <<"opponent_disconnected">>, <<"data">> => <<>>,
             <<"sender">> => <<>>, <<"receiver">> => <<>>}),
           Sender ! Response;
-        true -> Receiver ! Text %% send the JSON structure to the receiver
+        true -> %% No problem
+          Receiver ! Text %% send the JSON structure to the receiver
       end
   end,
   {ok, State}.
@@ -72,4 +77,16 @@ websocket_info(Info, State) ->
 terminate (TerminateReason, _Req, _State) ->
   io:format("Terminate reason: ~p\n", [TerminateReason]),
   %% I need to inform the opponent, if i am in a game
-  ok.
+  Value = ets:lookup(matches, self()),
+  if
+    Value == [] -> ok;
+    true ->
+      [{_,Opponent}] = Value, %% take the interesting part of the value
+      OpponentPID = whereis(Opponent),
+      if
+        OpponentPID == undefined -> ok;
+        true ->
+          Opponent ! jsx:encode(#{<<"code">> => 1, <<"type">> => <<"opponent_disconnected">>, <<"data">> => <<>>,
+            <<"sender">> => <<>>, <<"receiver">> => <<>>})
+      end
+  end.
