@@ -77,7 +77,7 @@
 
             <div class="right">
                 <h1>Connect Four</h1>
-                <button class ="mainButton" type="button" onclick="">Surrender</button>
+                <button class ="mainButton" type="button" onclick="surrender()">Surrender</button>
             </div>
 
             <div class="footer">

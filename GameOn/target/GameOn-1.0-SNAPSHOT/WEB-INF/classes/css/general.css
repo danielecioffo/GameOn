@@ -1,3 +1,5 @@
+body {font-family: Arial, Helvetica, sans-serif;}
+
 .mainButton {
     background-color: #3399ff;
     color: white;
@@ -10,6 +12,10 @@
 
 .mainButton:hover {
     opacity: 0.8;
+}
+
+.center-text {
+    text-align: center;
 }
 
 /*---------------------- CHAT -----------------*/
