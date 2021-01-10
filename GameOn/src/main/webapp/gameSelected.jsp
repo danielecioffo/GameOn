@@ -85,8 +85,14 @@
 
         function sendGameRequestAccepted (to_username) {
             sendWebSocket(new Message(0, 'game_request_accepted', null, username, to_username));
-            if (gameName === "connectFour")
-                window.location.href = "connectFour.jsp?color=red&opponent="+to_username;
+            // We need to wait some milliseconds, otherwise there can be some problems
+            setTimeout
+            (
+                function () {
+                    if (gameName === "connectFour")
+                        window.location.href = "connectFour.jsp?color=red&opponent="+to_username;
+                }, 500
+            );
         }
 
         /**
@@ -96,6 +102,7 @@
         ws.onmessage = function (event){
             var jsonString = JSON.parse(event.data);
             var sender = jsonString.sender;
+            console.log("Message received");
             if (jsonString.type === 'game_request') // I have received a game request
             {
                 var tr = document.createElement("TR");

@@ -99,7 +99,9 @@
             initWebSocket(username);
             const opponentUsername = '<% out.print(opponent);%>';
             // Send a message to register who is the opponent
-            sendWebSocket(new Message(0, "opponent_registration", opponentUsername, username, null));
+            waitForSocketConnection(ws, function(){
+                sendWebSocket(new Message(0, "opponent_registration", opponentUsername, username, null));
+            });
 
             /**
              * Override of the onMessage function written in webSocket.js

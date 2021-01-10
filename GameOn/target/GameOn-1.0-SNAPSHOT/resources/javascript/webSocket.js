@@ -45,10 +45,8 @@ function initWebSocket (username) {
  */
 function sendWebSocket(message)
 {
-    waitForSocketConnection(ws, function(){
-        ws.send(JSON.stringify(message));
-        console.log('Message sent');
-    });
+    ws.send(JSON.stringify(message));
+    console.log('Message sent');
 }
 
 /**
