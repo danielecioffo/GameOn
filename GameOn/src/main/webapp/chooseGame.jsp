@@ -20,8 +20,8 @@
             <img src='resources/images/icon.png' alt="App Icon" width="75%">
         </div>
         <form action="chooseGame-servlet" method="post">
-        <button name="battleShipButton" value="buttleShip" class="mainButton">Battle Ship</button>
-        <button name="connectFourButton" value="connectFour" class="mainButton">Connect Four</button>
+        <button class="mainButton" name="battleShipButton" value="battleShip">Battleship</button>
+        <button class="mainButton" name="connectFourButton" value="connectFour">Connect Four</button>
         </form>
     </div>
 </body>

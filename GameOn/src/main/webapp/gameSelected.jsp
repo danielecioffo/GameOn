@@ -5,19 +5,40 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Waiting for a match</title>
-    <link href="resources/css/chooseGamePage.css" rel="stylesheet" type="text/css">
     <link href="resources/css/general.css" rel="stylesheet" type="text/css">
     <style type="text/css">
         table{
-            border: 1px solid #2274ba;
+            border-collapse: collapse;
             font-size: 20px;
             text-align: center;
         }
 
-        th,td{
-            border: 1px solid #2274ba;
+        td, th {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+
+        th {
+            padding-top: 12px;
+            padding-bottom: 12px;
+            text-align: left;
+            background-color: #3399ff;
+            color: white;
+        }
+
+
+        td{
             padding-left: 10px;
             padding-right: 10px;
+        }
+
+        #ranking tr:nth-child(even) {
+            background-color: #e8f0fe;
+        }
+
+        #online tr:hover {
+            background-color: #e8f0fe;
+            cursor: pointer;
         }
     </style>
 </head>
@@ -29,7 +50,7 @@
     if (gameName.equals("connectFour"))
         out.println("Connect Four!");
     else if (gameName.equals("battleShip"))
-        out.println("Battle Ship!");
+        out.println("Battleship!");
     User myself = (User) session.getAttribute("loggedUser");
 %>
 </h1>
