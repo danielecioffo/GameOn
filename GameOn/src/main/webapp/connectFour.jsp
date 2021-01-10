@@ -77,8 +77,7 @@
 
             <div class="right">
                 <h1>Connect Four</h1>
-                <button class="mainButton" type="button" onclick="">Play</button>
-                <button class ="mainButton" type="button" onclick="surrender()">Surrender</button>
+                <button class ="mainButton" type="button" onclick="">Surrender</button>
             </div>
 
             <div class="footer">
@@ -89,7 +88,7 @@
                     </div>
 
                     <input name="usermsg" type="text" id="usermsg" placeholder="Type a message...">
-                    <button id="sendButton" class="mainButton">Send</button>
+                    <button id="sendButton" class="sendButton">Send</button>
                 </div>
             </div>
         </div>
