@@ -16,7 +16,7 @@
         <div id="overlay">
             <div id="message-div">
                 <p id="text">Prova</p>
-                <form action="result-servlet" method="post">
+                <form action="result-servlet" id="form" method="post">
                     <button class="goBackButton" id="goBackButton" name="hasWon" value="false">Go Back to Connect Four Lobby</button>
                 </form>
             </div>
@@ -109,6 +109,7 @@
                 document.getElementById("overlay").style.display = "block";
                 document.getElementById("message-div").style.display = "block"
                 document.getElementById("goBackButton").value = value;
+                setTimeout(function() { document.getElementById("goBackButton").click(); }, 3000);
             }
 
             function printTurn() {
