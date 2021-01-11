@@ -84,6 +84,7 @@
 
             <div class="right">
                 <h1>Connect Four</h1>
+                <p id="turn"></p>
                 <button class ="mainButton" type="button" onclick="surrender()">Surrender</button>
             </div>
 
@@ -108,6 +109,14 @@
                 document.getElementById("overlay").style.display = "block";
                 document.getElementById("message-div").style.display = "block"
                 document.getElementById("goBackButton").value = value;
+            }
+
+            function printTurn() {
+                if(yourTurn) {
+                    document.getElementById("turn").textContent = "It's your turn!";
+                } else {
+                    document.getElementById("turn").textContent = "It's " + opponent + "'s turn!";
+                }
             }
 
             const username = '<%= myself.getUsername() %>';
@@ -137,6 +146,7 @@
                     checkStatusOfGame(localCell);
 
                     yourTurn = !yourTurn;
+                    printTurn();
 
                     if (!gameIsLive) {
                         showEndOfGameMessage(winningText, "false");

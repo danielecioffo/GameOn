@@ -41,6 +41,8 @@ if(color === 'yellow') {
     opponentColor = 'red';
 }
 
+printTurn();
+
 // Functions
 const getClassListArray = (cell) => {
     const classList = cell.classList;
@@ -268,6 +270,7 @@ const handleCellClick = (e) => {
     checkStatusOfGame(openCell);
 
     yourTurn = !yourTurn;
+    printTurn();
     clearColorFromTop(colIndex);
 
     sendMove(opponent, openCell);
