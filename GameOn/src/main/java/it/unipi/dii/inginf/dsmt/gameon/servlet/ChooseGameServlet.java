@@ -1,5 +1,4 @@
 package it.unipi.dii.inginf.dsmt.gameon.servlet;
-import it.unipi.dii.inginf.dsmt.gameon.HelloServlet;
 import it.unipi.dii.inginf.dsmt.gameon.listener.SessionManager;
 import it.unipi.dii.inginf.dsmt.gameon.model.User;
 import it.unipi.dii.inginf.dsmt.gameon.persistence.KeyValueDBDriver;
@@ -14,9 +13,7 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.regex.Pattern;
 
 @WebServlet(name = "ChooseGameServlet", value = "/chooseGame-servlet")
 public class ChooseGameServlet extends HttpServlet{
