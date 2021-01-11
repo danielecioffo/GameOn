@@ -29,8 +29,10 @@ public class ResultServlet extends HttpServlet {
 
         KeyValueDBDriver db = KeyValueDBDriver.getInstance();
 
-        if (request.getParameter("hasWon").equals("true"))
+        if (request.getParameter("hasWon").equals("true")) {
             db.addUserWin(user, "connectFour");
+            request.setAttribute("hasWon", "false");
+        }
 
         request.setAttribute("connectFourButton", "true");
         request.getRequestDispatcher("chooseGame-servlet").forward(request, response);
