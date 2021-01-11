@@ -2,18 +2,15 @@ package it.unipi.dii.inginf.dsmt.gameon.listener;
 
 import it.unipi.dii.inginf.dsmt.gameon.model.User;
 
-import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
 import javax.servlet.http.*;
 import java.util.*;
-import java.util.function.Consumer;
-import java.util.stream.Collectors;
 
 @WebListener()
-/**
- * Listener for handle the sessions
+/*
+  Listener to handle the sessions
  */
 public class SessionManager implements ServletContextListener,
         HttpSessionListener, HttpSessionAttributeListener {
@@ -21,7 +18,7 @@ public class SessionManager implements ServletContextListener,
     // In case of unordered elements, a set is more efficient than a list
     // Note: not all the session are session of logged users!
     // At the creation, the user is not already logged in, this will happen later during the login procedure
-    private Set<HttpSession> activeSessions;
+    private final Set<HttpSession> activeSessions;
     // Key for this object in the servlet context
     private final String KEY = "sessionManager";
 

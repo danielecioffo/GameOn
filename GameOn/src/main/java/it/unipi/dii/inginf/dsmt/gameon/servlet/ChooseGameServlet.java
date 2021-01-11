@@ -2,8 +2,8 @@ package it.unipi.dii.inginf.dsmt.gameon.servlet;
 import it.unipi.dii.inginf.dsmt.gameon.listener.SessionManager;
 import it.unipi.dii.inginf.dsmt.gameon.model.User;
 import it.unipi.dii.inginf.dsmt.gameon.persistence.KeyValueDBDriver;
+import it.unipi.dii.inginf.dsmt.gameon.utils.Utils;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -11,7 +11,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,21 +27,14 @@ public class ChooseGameServlet extends HttpServlet{
     }
 
     private void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        RequestDispatcher requestDispatcher;
-        PrintWriter out = response.getWriter();
-
         if(request.getParameter("battleShipButton") != null){
             HttpSession session = request.getSession();
             String gameName = "battleShip";
             session.setAttribute("gameName", gameName);
-            requestDispatcher = request.getRequestDispatcher("gameSelected.jsp");
-            requestDispatcher.include(request, response);
         }else{
             HttpSession session = request.getSession();
             String gameName = "connectFour";
             session.setAttribute("gameName", gameName);
-            requestDispatcher = request.getRequestDispatcher("gameSelected.jsp");
-            requestDispatcher.include(request, response);
         }
         HttpSession session = request.getSession();
         SessionManager sessionManager =
@@ -64,6 +56,7 @@ public class ChooseGameServlet extends HttpServlet{
             request.setAttribute("ranking", keyValueDBDriver.getBattleshipRanking(5));  // cambiare con parametro da ParametriDiConfigurazione
         else
             request.setAttribute("ranking", keyValueDBDriver.getConnectFourRanking(5)); // cambiare con parametro da ParametriDiConfigurazione
-        request.getRequestDispatcher("/gameSelected.jsp").forward(request, response);
+
+        Utils.goToPage("gameSelected.jsp", request, response);
     }
 }

@@ -1,11 +1,9 @@
 package it.unipi.dii.inginf.dsmt.gameon.servlet;
 
-import it.unipi.dii.inginf.dsmt.gameon.listener.SessionManager;
 import it.unipi.dii.inginf.dsmt.gameon.model.User;
 import it.unipi.dii.inginf.dsmt.gameon.persistence.KeyValueDBDriver;
 import it.unipi.dii.inginf.dsmt.gameon.utils.Utils;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
