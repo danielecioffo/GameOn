@@ -273,10 +273,8 @@ const handleCellClick = (e) => {
     sendMove(opponent, openCell);
 
     if (!gameIsLive) {
-        console.log(winningText);
-
-        //TODO crea popup con stampato winningText e ritorna dopo tot secondi alla stanza di attesa
-        //TODO aggiungi eventuale vittoria al DB
+        document.getElementsByName("goBackButton").value = "true";
+        showEndOfGameMessage(winningText);
     }
 };
 

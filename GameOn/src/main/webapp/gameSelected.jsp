@@ -61,7 +61,7 @@
                 <tr>
                     <th>Username</th>
                 </tr>
-                <c:forEach var="item" items="${usrs}">
+                <c:forEach var="item" items="${users}">
                     <tr>
                         <td onclick="sendGameRequest('${item}');"> ${item}</td>
                     </tr>
@@ -81,7 +81,7 @@
             </table>
         </div>
         <div class="center-text">
-            <button class="mainButton" onclick = "window.location.href='chooseGame.jsp'">Go back to List's Games</button>
+            <button class="mainButton" onclick = "window.location.href='chooseGame.jsp'">Go back to the List of Games</button>
         </div>
     </div>
     <h2>Game requests received: </h2>

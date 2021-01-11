@@ -297,4 +297,14 @@ public class KeyValueDBDriver {
 
         return sortedByValue;
     }
+
+    public void addUserWin(User loggedUser, String game) {
+        String username = loggedUser.getUsername();
+        String key = "user:" + username + ":" + game + "Wins";
+
+        String value = getValue(key);
+        int wins = Integer.parseInt(value) + 1;
+
+        putValue(key, String.valueOf(wins));
+    }
 }

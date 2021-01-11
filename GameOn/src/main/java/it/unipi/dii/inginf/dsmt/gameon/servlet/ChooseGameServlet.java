@@ -59,7 +59,7 @@ public class ChooseGameServlet extends HttpServlet{
              ) {
             list.add(k.getUsername());
         }
-        request.setAttribute("usrs", list);
+        request.setAttribute("users", list);
         if(session.getAttribute("gameName").equals("battleShip"))
             request.setAttribute("ranking", keyValueDBDriver.getBattleshipRanking(5));  // cambiare con parametro da ParametriDiConfigurazione
         else

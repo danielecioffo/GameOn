@@ -13,6 +13,14 @@
         String opponent = request.getParameter("opponent");
     %>
     <body>
+        <div id="overlay">
+            <div id="message-div">
+                <p id="text">Prova</p>
+                <form action="result-servlet" method="post">
+                    <button class="goBackButton" name="goBackButton" value="false">Go Back to Connect Four Lobby</button>
+                </form>
+            </div>
+        </div>
         <div class="grid-container">
             <div class="header">
                 <button type="button" onclick = "window.location.href='./logout-servlet'">Logout</button>
@@ -72,7 +80,6 @@
                     <div class="cell row-5 col-5 bottom-border"></div>
                     <div class="cell row-5 col-6 bottom-border right-border"></div>
                 </div>
-                <span class="status"></span>
             </div>
 
             <div class="right">
@@ -94,6 +101,14 @@
         </div>
         <script src="resources/javascript/webSocket.js"></script>
         <script>
+            function showEndOfGameMessage(message) {
+                if(document.getElementById("overlay").style.display === "block")
+                    return;
+                document.getElementById("text").textContent = message;
+                document.getElementById("overlay").style.display = "block";
+                document.getElementById("message-div").style.display = "block";
+            }
+
             const username = '<%= myself.getUsername() %>';
             initWebSocket(username);
             const opponentUsername = '<% out.print(opponent);%>';
@@ -123,10 +138,7 @@
                     yourTurn = !yourTurn;
 
                     if (!gameIsLive) {
-                        console.log(winningText);
-
-                        //TODO crea popup con stampato winningText e ritorna dopo tot secondi alla stanza di attesa
-                        //TODO aggiungi eventuale vittoria al DB
+                        showEndOfGameMessage(winningText);
                     }
                 }
                 else if (jsonString.type === 'chat_message')
@@ -140,13 +152,11 @@
                 }
                 else if (jsonString.type === 'surrender') //the opponent surrender
                 {
-                    alert("The opponent has surrendered!");
-                    // TODO Go to the waiting room, but from a servlet
+                    showEndOfGameMessage(opponentUsername + " has surrendered!");
                 }
                 else if (jsonString.type === 'opponent_disconnected')
                 {
-                    alert("Opponent disconnected!");
-                    // TODO Go to the waiting room, using a servlet
+                    showEndOfGameMessage(opponentUsername + " disconnected!");
                 }
             };
 
