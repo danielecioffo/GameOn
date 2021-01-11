@@ -273,8 +273,7 @@ const handleCellClick = (e) => {
     sendMove(opponent, openCell);
 
     if (!gameIsLive) {
-        document.getElementsByName("goBackButton").value = "true";
-        showEndOfGameMessage(winningText);
+        showEndOfGameMessage(winningText, "true");
     }
 };
 

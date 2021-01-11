@@ -29,7 +29,7 @@ public class ResultServlet extends HttpServlet {
 
         KeyValueDBDriver db = KeyValueDBDriver.getInstance();
 
-        if (request.getParameter("goBackButton").equals("true"))
+        if (request.getParameter("hasWon").equals("true"))
             db.addUserWin(user, "connectFour");
 
         request.setAttribute("connectFourButton", "true");

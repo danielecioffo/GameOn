@@ -17,7 +17,7 @@
             <div id="message-div">
                 <p id="text">Prova</p>
                 <form action="result-servlet" method="post">
-                    <button class="goBackButton" name="goBackButton" value="false">Go Back to Connect Four Lobby</button>
+                    <button class="goBackButton" id="goBackButton" name="hasWon" value="false">Go Back to Connect Four Lobby</button>
                 </form>
             </div>
         </div>
@@ -101,12 +101,13 @@
         </div>
         <script src="resources/javascript/webSocket.js"></script>
         <script>
-            function showEndOfGameMessage(message) {
+            function showEndOfGameMessage(message, value) {
                 if(document.getElementById("overlay").style.display === "block")
                     return;
                 document.getElementById("text").textContent = message;
                 document.getElementById("overlay").style.display = "block";
-                document.getElementById("message-div").style.display = "block";
+                document.getElementById("message-div").style.display = "block"
+                document.getElementById("goBackButton").value = value;
             }
 
             const username = '<%= myself.getUsername() %>';
@@ -138,7 +139,7 @@
                     yourTurn = !yourTurn;
 
                     if (!gameIsLive) {
-                        showEndOfGameMessage(winningText);
+                        showEndOfGameMessage(winningText, "false");
                     }
                 }
                 else if (jsonString.type === 'chat_message')
@@ -152,11 +153,11 @@
                 }
                 else if (jsonString.type === 'surrender') //the opponent surrender
                 {
-                    showEndOfGameMessage(opponentUsername + " has surrendered!");
+                    showEndOfGameMessage(opponentUsername + " has surrendered!", "true");
                 }
                 else if (jsonString.type === 'opponent_disconnected')
                 {
-                    showEndOfGameMessage(opponentUsername + " disconnected!");
+                    showEndOfGameMessage(opponentUsername + " disconnected!", "true");
                 }
             };
 
