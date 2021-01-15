@@ -120,7 +120,7 @@ public class KeyValueDBDriver {
         if (password != null)
         {
             user = new User(username, password,
-                    parseInt(getValue("user:" + username + ":battleShipWins")),
+                    parseInt(getValue("user:" + username + ":ticTacToeWins")),
                     parseInt(getValue("user:" + username + ":connectFourWins")));
         }
         return user;
@@ -167,7 +167,7 @@ public class KeyValueDBDriver {
         // I do all the operations in a batch, for the atomicity property
         try (WriteBatch batch = db.createWriteBatch()) {
             batch.put(bytes("user:" + username + ":password"), bytes(password));
-            batch.put(bytes("user:" + username + ":battleShipWins"), bytes(String.valueOf(0)));
+            batch.put(bytes("user:" + username + ":ticTacToeWins"), bytes(String.valueOf(0)));
             batch.put(bytes("user:" + username + ":connectFourWins"), bytes(String.valueOf(0)));
             db.write(batch);
         } catch (final IOException e) {
@@ -212,12 +212,12 @@ public class KeyValueDBDriver {
     }
 
     /**
-     * Function that returns the ranking for Battleship
+     * Function that returns the ranking for Tris
      * @param limit number of records to be returned
      * @return  a sorted HashMap where the key is the username and the value is the number of wins
      */
-    public HashMap<String, Integer> getBattleshipRanking(int limit) {
-        return getRanking("battleShip", limit);
+    public HashMap<String, Integer> getTicTacToeRanking(int limit) {
+        return getRanking("ticTacToe", limit);
     }
 
     /**

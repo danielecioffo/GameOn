@@ -6,14 +6,14 @@ package it.unipi.dii.inginf.dsmt.gameon.model;
 public class User {
     private String username; // identifier
     private String password;
-    private int battleShipWins;
+    private int ticTacToeWins;
     private int connectFourWins;
 
-    public User (final String username, final String password, final int battleShipWins, final int connectFourWins)
+    public User (final String username, final String password, final int ticTacToeWins, final int connectFourWins)
     {
         this.username = username;
         this.password = password;
-        this.battleShipWins = battleShipWins;
+        this.ticTacToeWins = ticTacToeWins;
         this.connectFourWins = connectFourWins;
     }
 
@@ -38,12 +38,12 @@ public class User {
         this.password = password;
     }
 
-    public int getBattleShipWins() {
-        return battleShipWins;
+    public int getTicTacToeWins() {
+        return ticTacToeWins;
     }
 
-    public void setBattleShipWins(int battleShipWins) {
-        this.battleShipWins = battleShipWins;
+    public void setTicTacToeWins(int ticTacToeWins) {
+        this.ticTacToeWins = ticTacToeWins;
     }
 
     public int getConnectFourWins() {
@@ -59,7 +59,7 @@ public class User {
         return "User{" +
                 "username='" + username + '\'' +
                 ", password='" + password + '\'' +
-                ", battleShipWins=" + battleShipWins +
+                ", ticTacToeWins=" + ticTacToeWins +
                 ", connectFourWins=" + connectFourWins +
                 '}';
     }

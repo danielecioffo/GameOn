@@ -26,7 +26,6 @@ public class ResultServlet extends HttpServlet {
 
         KeyValueDBDriver db = KeyValueDBDriver.getInstance();
 
-        System.out.println(request.getMethod());
         if (request.getParameter("hasWon").equals("true"))
             db.addUserWin(user, "connectFour");
 

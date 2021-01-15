@@ -49,8 +49,8 @@
     String gameName = (String) session.getAttribute("gameName");
     if (gameName.equals("connectFour"))
         out.println("Connect Four!");
-    else if (gameName.equals("battleShip"))
-        out.println("Battleship!");
+    else if (gameName.equals("ticTacToe"))
+        out.println("Tic-Tac-Toe!");
     User myself = (User) session.getAttribute("loggedUser");
 %>
 </h1>
@@ -61,7 +61,7 @@
                 <tr>
                     <th>Username</th>
                 </tr>
-                <c:forEach var="item" items="${usrs}">
+                <c:forEach var="item" items="${users}">
                     <tr>
                         <td onclick="sendGameRequest('${item}');"> ${item}</td>
                     </tr>
@@ -81,7 +81,7 @@
             </table>
         </div>
         <div class="center-text">
-            <button class="mainButton" onclick = "window.location.href='chooseGame.jsp'">Go back to List's Games</button>
+            <button class="mainButton" onclick = "window.location.href='chooseGame.jsp'">Go back to the List of Games</button>
         </div>
     </div>
     <h2>Game requests received: </h2>
@@ -112,6 +112,10 @@
                 function () {
                     if (gameName === "connectFour")
                         window.location.href = "connectFour.jsp?color=red&opponent="+to_username;
+                    else if (gameName === "ticTacToe")
+                    {
+                        window.location.href = "ticTacToe.jsp?opponent="+to_username;
+                    }
                 }, 500
             );
         }
@@ -145,6 +149,10 @@
             {
                 if (gameName === "connectFour")
                     window.location.href = "connectFour.jsp?color=yellow&opponent="+sender;
+                else if (gameName === "ticTacToe")
+                {
+                    window.location.href = "ticTacToe.jsp?opponent="+sender;
+                }
             }
         };
     </script>

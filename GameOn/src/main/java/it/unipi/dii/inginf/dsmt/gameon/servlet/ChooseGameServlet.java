@@ -27,9 +27,9 @@ public class ChooseGameServlet extends HttpServlet{
     }
 
     private void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        if(request.getParameter("battleShipButton") != null){
+        if(request.getParameter("ticTacToeButton") != null){
             HttpSession session = request.getSession();
-            String gameName = "battleShip";
+            String gameName = "ticTacToe";
             session.setAttribute("gameName", gameName);
         }else{
             HttpSession session = request.getSession();
@@ -40,20 +40,18 @@ public class ChooseGameServlet extends HttpServlet{
         SessionManager sessionManager =
                 (SessionManager) session.getServletContext().getAttribute("sessionManager");
         List<User> users;
-        System.out.println(session.getAttribute("gameName"));
-        if(session.getAttribute("gameName").equals("battleShip"))
-            users = sessionManager.getOnlineUsersBattleShip();
+        if(session.getAttribute("gameName").equals("ticTacToe"))
+            users = sessionManager.getOnlineUsersTicTacToe();
         else
             users = sessionManager.getOnlineUsersConnectFour();
-        System.out.println(users);
         List<String> list = new ArrayList<>();
         for (User k: users
              ) {
             list.add(k.getUsername());
         }
         request.setAttribute("users", list);
-        if(session.getAttribute("gameName").equals("battleShip"))
-            request.setAttribute("ranking", keyValueDBDriver.getBattleshipRanking(5));  // cambiare con parametro da ParametriDiConfigurazione
+        if(session.getAttribute("gameName").equals("ticTacToe"))
+            request.setAttribute("ranking", keyValueDBDriver.getTicTacToeRanking(5));  // cambiare con parametro da ParametriDiConfigurazione
         else
             request.setAttribute("ranking", keyValueDBDriver.getConnectFourRanking(5)); // cambiare con parametro da ParametriDiConfigurazione
 

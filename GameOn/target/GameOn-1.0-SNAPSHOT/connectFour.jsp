@@ -13,6 +13,14 @@
         String opponent = request.getParameter("opponent");
     %>
     <body>
+        <div id="overlay">
+            <div id="message-div">
+                <p id="text">Prova</p>
+                <form action="result-servlet" id="form" method="post">
+                    <button class="goBackButton" id="goBackButton" name="hasWon" value="false">Go Back to Connect Four Lobby</button>
+                </form>
+            </div>
+        </div>
         <div class="grid-container">
             <div class="header">
                 <button type="button" onclick = "window.location.href='./logout-servlet'">Logout</button>
@@ -72,11 +80,11 @@
                     <div class="cell row-5 col-5 bottom-border"></div>
                     <div class="cell row-5 col-6 bottom-border right-border"></div>
                 </div>
-                <span class="status"></span>
             </div>
 
             <div class="right">
                 <h1>Connect Four</h1>
+                <p id="turn"></p>
                 <button class ="mainButton" type="button" onclick="surrender()">Surrender</button>
             </div>
 
@@ -94,6 +102,24 @@
         </div>
         <script src="resources/javascript/webSocket.js"></script>
         <script>
+            function showEndOfGameMessage(message, value) {
+                if(document.getElementById("overlay").style.display === "block")
+                    return;
+                document.getElementById("text").textContent = message;
+                document.getElementById("overlay").style.display = "block";
+                document.getElementById("message-div").style.display = "block"
+                document.getElementById("goBackButton").value = value;
+                setTimeout(function() { document.getElementById("goBackButton").click(); }, 3000);
+            }
+
+            function printTurn() {
+                if(yourTurn) {
+                    document.getElementById("turn").textContent = "It's your turn!";
+                } else {
+                    document.getElementById("turn").textContent = "It's " + opponent + "'s turn!";
+                }
+            }
+
             const username = '<%= myself.getUsername() %>';
             initWebSocket(username);
             const opponentUsername = '<% out.print(opponent);%>';
@@ -121,12 +147,10 @@
                     checkStatusOfGame(localCell);
 
                     yourTurn = !yourTurn;
+                    printTurn();
 
                     if (!gameIsLive) {
-                        console.log(winningText);
-
-                        //TODO crea popup con stampato winningText e ritorna dopo tot secondi alla stanza di attesa
-                        //TODO aggiungi eventuale vittoria al DB
+                        showEndOfGameMessage(winningText, "false");
                     }
                 }
                 else if (jsonString.type === 'chat_message')
@@ -140,13 +164,11 @@
                 }
                 else if (jsonString.type === 'surrender') //the opponent surrender
                 {
-                    alert("The opponent has surrendered!");
-                    // TODO Go to the waiting room, but from a servlet
+                    showEndOfGameMessage(opponentUsername + " has surrendered!", "true");
                 }
                 else if (jsonString.type === 'opponent_disconnected')
                 {
-                    alert("Opponent disconnected!");
-                    // TODO Go to the waiting room, using a servlet
+                    showEndOfGameMessage(opponentUsername + " disconnected!", "true");
                 }
             };
 

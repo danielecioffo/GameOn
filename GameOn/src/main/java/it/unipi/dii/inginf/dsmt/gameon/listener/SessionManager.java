@@ -118,12 +118,12 @@ public class SessionManager implements ServletContextListener,
     }
 
     /**
-     * Function that returns the list of the online users waiting for a Battleship game
+     * Function that returns the list of the online users waiting for a Tris game
      * @return  The list of the users
      */
-    public List<User> getOnlineUsersBattleShip ()
+    public List<User> getOnlineUsersTicTacToe ()
     {
-        return getOnlineUsers("battleShip");
+        return getOnlineUsers("ticTacToe");
     }
 
     /**
