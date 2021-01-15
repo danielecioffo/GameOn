@@ -114,7 +114,7 @@
                         window.location.href = "connectFour.jsp?color=red&opponent="+to_username;
                     else if (gameName === "ticTacToe")
                     {
-                        window.location.href = "ticTacToe.jsp?opponent="+to_username;
+                        window.location.href = "ticTacToe.jsp?start="+ to_username +"&opponent="+to_username;
                     }
                 }, 500
             );
@@ -151,7 +151,7 @@
                     window.location.href = "connectFour.jsp?color=yellow&opponent="+sender;
                 else if (gameName === "ticTacToe")
                 {
-                    window.location.href = "ticTacToe.jsp?opponent="+sender;
+                    window.location.href = "ticTacToe.jsp?start=" + username + "&opponent="+sender;
                 }
             }
         };

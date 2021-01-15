@@ -12,6 +12,7 @@
 <%
     User myself = (User) session.getAttribute("loggedUser");
     String opponent = request.getParameter("opponent");
+    String start = request.getParameter("start");
 %>
 <body>
 <div id="overlay">
@@ -110,7 +111,118 @@
     const username = '<%= myself.getUsername() %>';
     initWebSocket(username);
     const opponentUsername = '<% out.print(opponent);%>';
+    const start = '<% out.print(start);%>'; //User that starts the game (first turn)
     initTicTacToe();
+    if (start === opponentUsername)
+    {
+        yourTurn = false;
+    }
+
+    printTurn();
+
+    // Send a message to register who is the opponent
+    waitForSocketConnection(ws, function(){
+        sendWebSocket(new Message(0, "opponent_registration", opponentUsername, username, null));
+    });
+
+    /**
+     * Function used to send a move, called by the GUI
+     * @param choice    What cell has been chosen
+     */
+    function sendMove (choice) //Row=1, Column=2 -> choice=12
+    {
+        if (yourTurn)
+        {
+            let obj = {};
+            obj.row = parseInt(choice.toString().substring(0, 1));
+            obj.column = parseInt(choice.toString().substring(1, 2));
+            sendWebSocket(new Message(0, 'tic_tac_toe_move', obj, username, opponentUsername));
+
+            setCell(choice);
+            if (checkWinning(1))
+            {
+                showEndOfGameMessage("You have won!", "true");
+            }
+            else if (done > 8)
+            {
+                showEndOfGameMessage("Game is a tie!", "false");
+            }
+
+            yourTurn = !yourTurn;
+            printTurn();
+        }
+    }
+
+    /**
+     * Override of the onMessage function written in webSocket.js
+     * @param event     The event that leads to this handler
+     */
+    ws.onmessage = function (event){
+        var jsonString = JSON.parse(event.data);
+        var sender = jsonString.sender;
+        if (jsonString.type === 'tic_tac_toe_move') {
+            console.log(sender + " made their move.");
+
+            const row = jsonString.data.row;
+            const column = jsonString.data.column;
+
+            // If row=1 and column=2, then choice = 12
+            const choice = String(row).concat(String(column));
+            document.images['rc' + choice].src = "resources/images/circle128.png";
+            document.images['rc' + choice].alt = "";
+            moves[choice]=2; //taken by the opponent
+
+            yourTurn = !yourTurn;
+            printTurn();
+
+            if (checkWinning(2))
+            {
+                showEndOfGameMessage("You have lost!", "false");
+            }
+        }
+        else if (jsonString.type === 'chat_message')
+        {
+            let p = document.createElement("P");
+            let receivedMessage = jsonString.data;
+            let text = document.createTextNode(sender + ": " + receivedMessage);
+            p.appendChild(text);
+            p.className = "message-left";
+            chatBox.appendChild(p);
+        }
+        else if (jsonString.type === 'surrender') //the opponent surrender
+        {
+            showEndOfGameMessage(opponentUsername + " has surrendered!", "true");
+        }
+        else if (jsonString.type === 'opponent_disconnected')
+        {
+            showEndOfGameMessage(opponentUsername + " disconnected!", "true");
+        }
+    };
+
+    function surrender ()
+    {
+        let message = new Message(0, "surrender", null, username, opponentUsername);
+        sendWebSocket(message);
+        showEndOfGameMessage("You have disconnected!", "false");
+    }
+
+    function showEndOfGameMessage(message, value) {
+        if(document.getElementById("overlay").style.display === "block")
+            return;
+        document.getElementById("text").textContent = message;
+        document.getElementById("overlay").style.display = "block";
+        document.getElementById("message-div").style.display = "block"
+        document.getElementById("goBackButton").value = value;
+        setTimeout(function() { document.getElementById("goBackButton").click(); }, 3000);
+    }
+
+    function printTurn() {
+        if(yourTurn) {
+            document.getElementById("turn").textContent = "It's your turn!";
+        } else {
+            document.getElementById("turn").textContent = "It's " + opponentUsername + "'s turn!";
+        }
+    }
 </script>
 </body>
 </html>

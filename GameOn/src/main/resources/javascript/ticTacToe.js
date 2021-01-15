@@ -1,3 +1,5 @@
+let yourTurn = true;
+
 let won, done; //done is the total number of move
 let moves=[];
 let choices=[11,12,13,21,22,23,31,32,33];
@@ -11,6 +13,9 @@ ways[6]=[0,13,23,33];
 ways[7]=[0,11,22,33];
 ways[8]=[0,13,22,31];
 
+/**
+ * Function that initializes the Tic-Tac-Toe game logic
+ */
 function initTicTacToe()
 {
     won=false;
@@ -23,6 +28,10 @@ function initTicTacToe()
     }
 }
 
+/**
+ * Function that try to insert the symbol X on the cell
+ * @param cellNum   Which cell
+ */
 function setCell(cellNum)
 {
     if(moves[cellNum]===0) //If the cell is free
@@ -34,6 +43,11 @@ function setCell(cellNum)
     }
 }
 
+/**
+ * Function used to check if me or the opponent has won
+ * @param player        Which player to check
+ * @returns {boolean}   True if the player has won, false otherwise
+ */
 function checkWinning (player)
 {
     //player=1 -> myself, player=2 -> opponent
@@ -48,17 +62,4 @@ function checkWinning (player)
         }
     }
     return won;
-}
-
-function sendMove (choice)
-{
-    setCell(choice);
-    if (checkWinning(1))
-    {
-        alert("You have won!");
-    }
-    else if (done > 8)
-    {
-        alert("Game is a tie!");
-    }
 }

@@ -201,6 +201,7 @@
             {
                 let message = new Message(0, "surrender", null, username, opponentUsername);
                 sendWebSocket(message);
+                showEndOfGameMessage("You have disconnected!", "false");
             }
         </script>
         <script type="text/javascript" src="resources/javascript/chat.js"></script>
