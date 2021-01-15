@@ -298,7 +298,25 @@ public class KeyValueDBDriver {
         return sortedByValue;
     }
 
-    public void addUserWin(User loggedUser, String game) {
+    /**
+     * Add one point to the user
+     * @param loggedUser    The User which value has to be updated
+     */
+    public void addUserWinTicTacToe (User loggedUser)
+    {
+        addUserWin(loggedUser, "ticTacToe");
+    }
+
+    /**
+     * Add one point to the user
+     * @param loggedUser    The User which value has to be updated
+     */
+    public void addUserWinConnectFour (User loggedUser)
+    {
+        addUserWin(loggedUser, "connectFour");
+    }
+
+    private void addUserWin(User loggedUser, String game) {
         String username = loggedUser.getUsername();
         String key = "user:" + username + ":" + game + "Wins";
 

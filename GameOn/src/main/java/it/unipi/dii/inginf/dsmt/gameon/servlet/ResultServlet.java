@@ -26,10 +26,21 @@ public class ResultServlet extends HttpServlet {
 
         KeyValueDBDriver db = KeyValueDBDriver.getInstance();
 
-        if (request.getParameter("hasWon").equals("true"))
-            db.addUserWin(user, "connectFour");
+        if (request.getParameter("hasWonConnectFour") != null)
+        {
+            if (request.getParameter("hasWonConnectFour").equals("true"))
+                db.addUserWinConnectFour(user);
 
-        request.setAttribute("connectFourButton", "true");
-        response.sendRedirect(request.getContextPath() + "/chooseGame-servlet");
+            request.setAttribute("connectFourButton", "connectFour");
+            response.sendRedirect(request.getContextPath() + "/chooseGame-servlet");
+        }
+        else if (request.getParameter("hasWonTicTacToe") != null)
+        {
+            if (request.getParameter("hasWonTicTacToe").equals("true"))
+                db.addUserWinTicTacToe(user);
+
+            request.setAttribute("ticTacToeButton", "ticTacToe");
+            response.sendRedirect(request.getContextPath() + "/chooseGame-servlet");
+        }
     }
 }

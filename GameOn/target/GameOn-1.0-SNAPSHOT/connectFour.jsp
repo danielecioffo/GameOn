@@ -15,9 +15,9 @@
     <body>
         <div id="overlay">
             <div id="message-div">
-                <p id="text">Prova</p>
+                <p id="text">Text to show</p>
                 <form action="result-servlet" id="form" method="post">
-                    <button class="goBackButton" id="goBackButton" name="hasWon" value="false">Go Back to Connect Four Lobby</button>
+                    <button class="goBackButton" id="goBackButton" name="hasWonConnectFour" value="false">Go Back to Connect Four Lobby</button>
                 </form>
             </div>
         </div>

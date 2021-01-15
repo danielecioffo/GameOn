@@ -19,7 +19,7 @@
     <div id="message-div">
         <p id="text">Message to show</p>
         <form action="result-servlet" id="form" method="post">
-            <button class="goBackButton" id="goBackButton" name="hasWon" value="false">Go Back to Tic-Tac-Toe Lobby</button>
+            <button class="goBackButton" id="goBackButton" name="hasWonTicTacToe" value="false">Go Back to Tic-Tac-Toe Lobby</button>
         </form>
     </div>
 </div>
