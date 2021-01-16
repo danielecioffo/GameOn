@@ -8,10 +8,13 @@ src/main/resources/config.xml
 # Editor-based HTTP Client requests
 /httpRequests/
 /home/francesco/Documenti/repo/GameOn/GameOn/.idea
+../.idea
 
 /home/francesco/Documenti/repo/GameOn/GameOn/target
 GameOn/target
+../target
 
 src/main/resources/config.xml
 /home/francesco/Documenti/repo/GameOn/GameOn/src/main/resources/config.xml
+../src/main/resources/config.xml
 
