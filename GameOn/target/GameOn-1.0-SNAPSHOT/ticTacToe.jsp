@@ -94,28 +94,28 @@
         <button class ="mainButton" type="button" onclick="surrender()">Surrender</button>
     </div>
 
-    <script>
-        const startingMinutes = 1.5;    //un min e mezzo di timer
-        let time = startingMinutes * 60;
-        var countdownEl = document.getElementById("countdown");
-        setInterval(updateCountdown, 1000);
+<%--    <script>--%>
+<%--        const startingMinutes = 1.5;    //un min e mezzo di timer--%>
+<%--        let time = startingMinutes * 60;--%>
+<%--        var countdownEl = document.getElementById("countdown");--%>
+<%--        setInterval(updateCountdown, 1000);--%>
 
-        function updateCountdown(){
-            var mins = Math.floor(time / 60);
-            let secs = time % 60;
-            if(secs>9)
-                countdownEl.innerHTML = "0"+mins.toString()+":"+secs.toString();
-            else
-                countdownEl.innerHTML = "0"+mins.toString()+":0"+secs.toString();
-            if(mins==0 && secs==0){
-                //timer scaduto!!
-                return;
-            }
-            time--;
-        }
+<%--        function updateCountdown(){--%>
+<%--            var mins = Math.floor(time / 60);--%>
+<%--            let secs = time % 60;--%>
+<%--            if(secs>9)--%>
+<%--                countdownEl.innerHTML = "0"+mins.toString()+":"+secs.toString();--%>
+<%--            else--%>
+<%--                countdownEl.innerHTML = "0"+mins.toString()+":0"+secs.toString();--%>
+<%--            if(mins==0 && secs==0){--%>
+<%--                //timer scaduto!!--%>
+<%--                return;--%>
+<%--            }--%>
+<%--            time--;--%>
+<%--        }--%>
 
-        function restartCountdown(){ time = startingMinutes * 60; }
-    </script>
+<%--        function restartCountdown(){ time = startingMinutes * 60; }--%>
+<%--    </script>--%>
 
     <div class="footer">
         <div class="wrapper">
@@ -221,6 +221,11 @@
         else if (jsonString.type === 'opponent_disconnected')
         {
             showEndOfGameMessage(opponentUsername + " disconnected!", "true");
+        }
+        else if (jsonString.type === 'pass')
+        {
+            yourTurn = !yourTurn;
+            printTurn();
         }
     };
 

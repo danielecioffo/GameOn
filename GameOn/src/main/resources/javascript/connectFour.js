@@ -288,3 +288,28 @@ for (const row of rows) {
         cell.addEventListener('click', handleCellClick);
     }
 }
+
+// Timer
+const startingMinutes = 1.5;    //un min e mezzo di timer
+let time = startingMinutes * 60;
+var countdownEl = document.getElementById("countdown");
+setInterval(updateCountdown, 1000);
+
+function updateCountdown(){
+    var mins = Math.floor(time / 60);
+    let secs = time % 60;
+    if(secs>9)
+        countdownEl.innerHTML = "0"+mins.toString()+":"+secs.toString();
+    else
+        countdownEl.innerHTML = "0"+mins.toString()+":0"+secs.toString();
+    if(mins==0 && secs==0){
+        let message = new Message(0, "pass", null, username, opponentUsername);
+        sendWebSocket(message);
+        // showEndOfGameMessage("You have disconnected!", "false");
+        restartCountdown();
+        return;
+    }
+    time--;
+}
+
+function restartCountdown(){ time = startingMinutes * 60; }
