@@ -3,6 +3,15 @@
 /workspace.xml
 # Datasource local storage ignored files
 /../../../../../../../:\Users\feder\IdeaProjects\GameOn\GameOn\.idea/dataSources/
+src/main/resources/config.xml
 /dataSources.local.xml
 # Editor-based HTTP Client requests
 /httpRequests/
+/home/francesco/Documenti/repo/GameOn/GameOn/.idea
+
+/home/francesco/Documenti/repo/GameOn/GameOn/target
+GameOn/target
+
+src/main/resources/config.xml
+/home/francesco/Documenti/repo/GameOn/GameOn/src/main/resources/config.xml
+

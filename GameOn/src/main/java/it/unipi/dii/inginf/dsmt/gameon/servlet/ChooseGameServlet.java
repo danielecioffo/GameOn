@@ -45,9 +45,11 @@ public class ChooseGameServlet extends HttpServlet{
         else
             users = sessionManager.getOnlineUsersConnectFour();
         List<String> list = new ArrayList<>();
+        User myself = (User) session.getAttribute("loggedUser");
         for (User k: users
              ) {
-            list.add(k.getUsername());
+            if(!k.getUsername().equals(myself.getUsername()))
+                list.add(k.getUsername());
         }
         request.setAttribute("users", list);
         if(session.getAttribute("gameName").equals("ticTacToe"))
