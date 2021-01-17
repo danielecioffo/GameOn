@@ -56,8 +56,8 @@
 </h1>
 <h2 class="center-text">Waiting for a match</h2>
     <div style="width: 50%; margin: 0 auto">
-        <div>
-            <table id="online" style="float: left">
+        <div class="center-text" style="min-width: 345px">
+            <table id="online" style="float: left; margin-right:10px">
                 <tr>
                     <th>Username</th>
                 </tr>
@@ -79,8 +79,6 @@
                     </tr>
                 </c:forEach>
             </table>
-        </div>
-        <div class="center-text">
             <button class="mainButton" onclick = "window.location.href='chooseGame.jsp'">Go back to the List of Games</button>
         </div>
     </div>

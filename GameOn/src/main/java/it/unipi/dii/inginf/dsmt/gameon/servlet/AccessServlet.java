@@ -42,7 +42,7 @@ public class AccessServlet extends HttpServlet {
         List<User> usersOnline = sessionManager.getAllOnlineUsers();
         for (User u: usersOnline
              ) {
-            if(u.getUsername().equals(username)){
+            if(u.getUsername().equals(username) && session.getAttribute("loggedUser")==null){
                 System.out.println("User already logged in!");
                 Utils.goToPage("index.jsp", request, response);
                 out.println("<script>alert(\"User already logged in!\")</script>");
@@ -71,6 +71,7 @@ public class AccessServlet extends HttpServlet {
             {
                 if (keyValueDBDriver.isRegistered(username)) //The username is already in use
                 {
+                    System.out.println("Sorry, the username is already in use!");
                     out.print("Sorry, the username is already in use!");
                     Utils.goToPage("index.jsp", request, response);
                 } else {
