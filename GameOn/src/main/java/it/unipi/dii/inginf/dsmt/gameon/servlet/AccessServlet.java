@@ -39,14 +39,17 @@ public class AccessServlet extends HttpServlet {
         HttpSession session = request.getSession();
         SessionManager sessionManager =
                 (SessionManager) session.getServletContext().getAttribute("sessionManager");
-        List<User> usersOnline = sessionManager.getAllOnlineUsers();
-        for (User u: usersOnline
-             ) {
-            if(u.getUsername().equals(username) && session.getAttribute("loggedUser")==null){
-                System.out.println("User already logged in!");
-                Utils.goToPage("index.jsp", request, response);
-                out.println("<script>alert(\"User already logged in!\")</script>");
-                return;
+        if (session.getAttribute("loggedUser")==null)
+        {
+            List<User> usersOnline = sessionManager.getAllOnlineUsers();
+            for (User u: usersOnline
+            ) {
+                if(u.getUsername().equals(username)){
+                    System.out.println("User already logged in!");
+                    Utils.goToPage("index.jsp", request, response);
+                    out.println("<script>alert(\"User already logged in!\")</script>");
+                    return;
+                }
             }
         }
 
