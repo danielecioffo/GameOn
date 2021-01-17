@@ -298,6 +298,8 @@ function updateCountdown(){
     if(mins==0 && secs==0){
         let message = new Message(0, "pass", null, username, opponentUsername);
         sendWebSocket(message);
+        yourTurn = !yourTurn
+        printTurn();
         restartCountdown();
         return;
     }
