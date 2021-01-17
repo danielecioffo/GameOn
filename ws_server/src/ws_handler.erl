@@ -41,12 +41,13 @@ websocket_handle ({text, Text}, State) ->
   Sender = erlang:binary_to_atom(maps:get(<<"sender">>, Map)),
   if
     %% Registration of this process with the atom of the username, this is useful for contacting him from other processes
-    Type == username_registration -> register(erlang:binary_to_atom(maps:get(<<"data">>, Map)), self());
+    Type == username_registration ->
+      register(erlang:binary_to_atom(maps:get(<<"data">>, Map)), self()),
+      NewState = State;
     Type == opponent_registration ->
-      %% Each user register the opponent in the ETS table "matches"
-      %% We save directly {UserPID, opponentUsername} because on the terminate function we can't lookup with the registered name
-      ets:insert(matches, {whereis(Sender), erlang:binary_to_atom(maps:get(<<"data">>, Map))});
+      NewState = {erlang:binary_to_atom(maps:get(<<"data">>, Map))}; %% register in the state the opponent
     true ->
+      NewState = State,
       Receiver = erlang:binary_to_atom(maps:get(<<"receiver">>, Map)),
       ReceiverPID = whereis(Receiver),
       if
@@ -58,7 +59,7 @@ websocket_handle ({text, Text}, State) ->
           Receiver ! Text %% send the JSON structure to the receiver
       end
   end,
-  {ok, State}.
+  {ok, NewState}.
 
 %% The websocket_info/2 callback is called when we use the ! operator
 %% So Cowboy will call websocket_info/2 whenever an Erlang message arrives.
@@ -74,19 +75,20 @@ websocket_info(Info, State) ->
 %% The most common reasons are stop and remote
 %% stop -> The server close the connection
 %% remote -> The client close the connection
-terminate (TerminateReason, _Req, _State) ->
+
+%% In case we have registered an opponent
+terminate (TerminateReason, _Req, {OpponentUsername}) ->
   io:format("Terminate reason: ~p\n", [TerminateReason]),
-  %% I need to inform the opponent, if i am in a game
-  Value = ets:lookup(matches, self()),
+  OpponentPID = whereis(OpponentUsername),
   if
-    Value == [] -> ok;
-    true ->
-      [{_,Opponent}] = Value, %% take the interesting part of the value
-      OpponentPID = whereis(Opponent),
-      if
-        OpponentPID == undefined -> ok;
-        true ->
-          Opponent ! jsx:encode(#{<<"code">> => 1, <<"type">> => <<"opponent_disconnected">>, <<"data">> => <<>>,
-            <<"sender">> => <<>>, <<"receiver">> => <<>>})
-      end
-  end.
+    OpponentPID == undefined -> %% The opponent is already disconnected
+      ok;
+    true -> %% No problem
+      OpponentPID ! jsx:encode(#{<<"code">> => 0, <<"type">> => <<"opponent_disconnected">>, <<"data">> => <<>>,
+        <<"sender">> => <<>>, <<"receiver">> => <<>>})
+  end;
+
+%% In case of empty state
+terminate (TerminateReason, _Req, {}) ->
+  io:format("Terminate reason: ~p\n", [TerminateReason]),
+  ok.
