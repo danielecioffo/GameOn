@@ -233,13 +233,6 @@ const checkStatusOfGame = (cell) => {
     winningText = "Game is a tie!";
 };
 
-// WebSocket functions
-function sendMove(to_username, cell) {
-    let obj = {};
-    [obj.row, obj.column] = getCellLocation(cell);
-    sendWebSocket(new Message(0, 'connect_four_move', obj, username, to_username));
-}
-
 
 // Event Handlers
 const handleCellMouseOver = (e) => {
@@ -290,7 +283,7 @@ for (const row of rows) {
 }
 
 // Timer
-const startingMinutes = 1.5;    //un min e mezzo di timer
+const startingMinutes = 0.5;    //un min e mezzo di timer
 let time = startingMinutes * 60;
 var countdownEl = document.getElementById("countdown");
 setInterval(updateCountdown, 1000);
@@ -305,7 +298,6 @@ function updateCountdown(){
     if(mins==0 && secs==0){
         let message = new Message(0, "pass", null, username, opponentUsername);
         sendWebSocket(message);
-        // showEndOfGameMessage("You have disconnected!", "false");
         restartCountdown();
         return;
     }

@@ -65,7 +65,7 @@ function checkWinning (player)
 }
 
 // Timer
-const startingMinutes = 1.5;    //un min e mezzo di timer
+const startingMinutes = 0.5;    //un min e mezzo di timer
 let time = startingMinutes * 60;
 var countdownEl = document.getElementById("countdown");
 setInterval(updateCountdown, 1000);
@@ -80,7 +80,6 @@ function updateCountdown(){
     if(mins==0 && secs==0){
         let message = new Message(0, "pass", null, username, opponentUsername);
         sendWebSocket(message);
-        // showEndOfGameMessage("You have disconnected!", "false");
         restartCountdown();
         return;
     }

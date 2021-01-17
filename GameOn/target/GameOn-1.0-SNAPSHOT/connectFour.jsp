@@ -137,6 +137,14 @@
                 sendWebSocket(new Message(0, "opponent_registration", opponentUsername, username, null));
             });
 
+            // WebSocket functions
+            function sendMove(to_username, cell) {
+                let obj = {};
+                [obj.row, obj.column] = getCellLocation(cell);
+                sendWebSocket(new Message(0, 'connect_four_move', obj, username, to_username));
+                restartCountdown();
+            }
+
             /**
              * Override of the onMessage function written in webSocket.js
              * @param event     The event that leads to this handler
@@ -161,6 +169,7 @@
                     if (!gameIsLive) {
                         showEndOfGameMessage(winningText, "false");
                     }
+                    restartCountdown();
                 }
                 else if (jsonString.type === 'chat_message')
                 {
@@ -183,6 +192,7 @@
                 {
                     yourTurn = !yourTurn;
                     printTurn();
+                    restartCountdown();
                 }
             };
 

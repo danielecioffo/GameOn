@@ -12,7 +12,7 @@
 <%
     User myself = (User) session.getAttribute("loggedUser");
     String opponent = request.getParameter("opponent");
-    String start = request.getParameter("start");
+    String start = request.getParameter("start"); //Which user start
 %>
 <body>
 <div id="overlay">
@@ -94,29 +94,6 @@
         <button class ="mainButton" type="button" onclick="surrender()">Surrender</button>
     </div>
 
-<%--    <script>--%>
-<%--        const startingMinutes = 1.5;    //un min e mezzo di timer--%>
-<%--        let time = startingMinutes * 60;--%>
-<%--        var countdownEl = document.getElementById("countdown");--%>
-<%--        setInterval(updateCountdown, 1000);--%>
-
-<%--        function updateCountdown(){--%>
-<%--            var mins = Math.floor(time / 60);--%>
-<%--            let secs = time % 60;--%>
-<%--            if(secs>9)--%>
-<%--                countdownEl.innerHTML = "0"+mins.toString()+":"+secs.toString();--%>
-<%--            else--%>
-<%--                countdownEl.innerHTML = "0"+mins.toString()+":0"+secs.toString();--%>
-<%--            if(mins==0 && secs==0){--%>
-<%--                //timer scaduto!!--%>
-<%--                return;--%>
-<%--            }--%>
-<%--            time--;--%>
-<%--        }--%>
-
-<%--        function restartCountdown(){ time = startingMinutes * 60; }--%>
-<%--    </script>--%>
-
     <div class="footer">
         <div class="wrapper">
             <p class="title">Chatbox</p>
@@ -143,7 +120,7 @@
         yourTurn = false;
     }
 
-    printTurn();
+    printTurn(); // Initial print
 
     // Send a message to register who is the opponent
     waitForSocketConnection(ws, function(){
@@ -175,6 +152,8 @@
 
             yourTurn = !yourTurn;
             printTurn();
+
+            restartCountdown();
         }
     }
 
@@ -186,7 +165,7 @@
         var jsonString = JSON.parse(event.data);
         var sender = jsonString.sender;
         if (jsonString.type === 'tic_tac_toe_move') {
-            console.log(sender + " made their move.");
+            console.log(sender + " made his move.");
 
             const row = jsonString.data.row;
             const column = jsonString.data.column;
@@ -196,6 +175,7 @@
             document.images['rc' + choice].src = "resources/images/circle128.png";
             document.images['rc' + choice].alt = "";
             moves[choice]=2; //taken by the opponent
+            done++;
 
             yourTurn = !yourTurn;
             printTurn();
@@ -204,6 +184,12 @@
             {
                 showEndOfGameMessage("You have lost!", "false");
             }
+            else if (done > 8)
+            {
+                showEndOfGameMessage("Game is a tie!", "false");
+            }
+
+            restartCountdown();
         }
         else if (jsonString.type === 'chat_message')
         {
@@ -226,6 +212,7 @@
         {
             yourTurn = !yourTurn;
             printTurn();
+            restartCountdown();
         }
     };
 
