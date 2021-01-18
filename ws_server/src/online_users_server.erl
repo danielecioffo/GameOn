@@ -36,19 +36,18 @@ server_loop(Delegates) ->
       server_loop(Delegates)
   end.
 
-
 %loop for the connect_four process
 connect_four_loop(Server, OnlineList) ->
   receive
     {From, add} ->
       NewOnlineList = OnlineList ++ [From],
-      send_all(OnlineList, NewOnlineList),
+      send_all(NewOnlineList),
       io:format("Connect Four: ~s added to the list of online users~n", [From]),
       io:format("==> Connect Four currently online users: ~w ~n", [NewOnlineList]),
       connect_four_loop(Server, NewOnlineList);
     {From, remove} ->
       NewOnlineList = lists:delete(From, OnlineList),
-      send_all(NewOnlineList, NewOnlineList),
+      send_all(NewOnlineList),
       io:format("Connect Four: ~s removed from the list of online users~n", [From]),
       io:format("==> Connect Four currently online users: ~w ~n", [NewOnlineList]),
       connect_four_loop(Server, NewOnlineList);
@@ -57,18 +56,18 @@ connect_four_loop(Server, OnlineList) ->
     _ -> connect_four_loop(Server, OnlineList)  %any other message is skipped
   end.
 
-%loop for the tic_tac_toe process
+% loop for the tic_tac_toe process
 tic_tac_toe_loop(Server, OnlineList) ->
   receive
     {From, add} ->
       NewOnlineList = OnlineList ++ [From],
-      send_all(OnlineList, NewOnlineList),
+      send_all(NewOnlineList),
       io:format("Tic-Tac-Toe: ~s added to the list of online users~n", [From]),
       io:format("==> Tic-Tac-Toe currently online users: ~w ~n", [NewOnlineList]),
       tic_tac_toe_loop(Server, NewOnlineList);
     {From, remove} ->
       NewOnlineList = lists:delete(From, OnlineList),
-      send_all(NewOnlineList, NewOnlineList),
+      send_all(NewOnlineList),
       io:format("Tic-Tac-Toe: ~s removed from the list of online users~n", [From]),
       io:format("==> Tic-Tac-Toe currently online users: ~w ~n", [NewOnlineList]),
       tic_tac_toe_loop(Server, NewOnlineList);
@@ -77,8 +76,11 @@ tic_tac_toe_loop(Server, OnlineList) ->
     _ -> tic_tac_toe_loop(Server, OnlineList)  %any other message is skipped
   end.
 
+% sends a message to all online users
+send_all(List) ->
+  send_all(List, List).
+
 send_all([], _) -> ok;
-send_all([End|Others], List) ->
-  End ! jsx:encode(#{<<"code">> => 0, <<"type">> => <<"list_update">>, <<"data">> => <<List>>,
-  <<"sender">> => <<>>, <<"receiver">> => <<>>}),
-  sendall(Others).
+send_all([First|Others], List) ->
+  First ! jsx:encode(#{<<"code">> => 0, <<"type">> => <<"list_update">>, <<"data">> => List, <<"sender">> => <<>>, <<"receiver">> => <<>>}),
+  send_all(Others, List).

@@ -61,11 +61,6 @@
                 <tr>
                     <th>Username</th>
                 </tr>
-                <c:forEach var="item" items="${users}">
-                    <tr>
-                        <td onclick="sendGameRequest('${item}');"> ${item}</td>
-                    </tr>
-                </c:forEach>
             </table>
             <table id="ranking" style="float: right">
                 <tr>
@@ -164,7 +159,26 @@
                 }
             } else if(jsonString.type === 'list_update')
             {
-                //TODO aggiornare lista di utenti online
+                let list = jsonString.data;
+
+                let table = document.getElementById("online");
+
+                while(table.childNodes.length > 2) {
+                    table.removeChild(table.lastChild);
+                }
+
+                // Prints the list of online users
+                for (let step = 0; step < list.length; step++) {
+                    let tr = document.createElement("tr");
+                    let td = document.createElement("td");
+                    td.textContent = list[step];
+                    td.addEventListener("click", function () {
+                        sendGameRequest(td.textContent);
+                    })
+
+                    tr.appendChild(td);
+                    table.appendChild(tr);
+                }
             }
         };
     </script>
