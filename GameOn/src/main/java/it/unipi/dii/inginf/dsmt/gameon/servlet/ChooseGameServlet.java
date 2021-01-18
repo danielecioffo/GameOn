@@ -36,26 +36,13 @@ public class ChooseGameServlet extends HttpServlet{
             String gameName = "connectFour";
             session.setAttribute("gameName", gameName);
         }
+
         HttpSession session = request.getSession();
-        SessionManager sessionManager =
-                (SessionManager) session.getServletContext().getAttribute("sessionManager");
-        List<User> users;
+
         if(session.getAttribute("gameName").equals("ticTacToe"))
-            users = sessionManager.getOnlineUsersTicTacToe();
+            request.setAttribute("ranking", keyValueDBDriver.getTicTacToeRanking(5));  // TODO cambiare con parametro da ParametriDiConfigurazione
         else
-            users = sessionManager.getOnlineUsersConnectFour();
-        List<String> list = new ArrayList<>();
-        User myself = (User) session.getAttribute("loggedUser");
-        for (User k: users
-             ) {
-            if(!k.getUsername().equals(myself.getUsername()))
-                list.add(k.getUsername());
-        }
-        request.setAttribute("users", list);
-        if(session.getAttribute("gameName").equals("ticTacToe"))
-            request.setAttribute("ranking", keyValueDBDriver.getTicTacToeRanking(5));  // cambiare con parametro da ParametriDiConfigurazione
-        else
-            request.setAttribute("ranking", keyValueDBDriver.getConnectFourRanking(5)); // cambiare con parametro da ParametriDiConfigurazione
+            request.setAttribute("ranking", keyValueDBDriver.getConnectFourRanking(5)); // TODO cambiare con parametro da ParametriDiConfigurazione
 
         Utils.goToPage("gameSelected.jsp", request, response);
     }
