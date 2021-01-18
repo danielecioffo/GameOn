@@ -136,6 +136,7 @@
             waitForSocketConnection(ws, function(){
                 sendWebSocket(new Message(0, "opponent_registration", opponentUsername, username, null));
             });
+            let failedTurnCounter = 0; // The number of turns lost
 
             // WebSocket functions
             function sendMove(to_username, cell) {
@@ -143,6 +144,7 @@
                 [obj.row, obj.column] = getCellLocation(cell);
                 sendWebSocket(new Message(0, 'connect_four_move', obj, username, to_username));
                 restartCountdown();
+                failedTurnCounter = 0;
             }
 
             /**

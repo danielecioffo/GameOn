@@ -65,7 +65,7 @@ function checkWinning (player)
 }
 
 // Timer
-const startingMinutes = 0.5;    //un min e mezzo di timer
+const startingMinutes = 0.5;
 let time = startingMinutes * 60;
 var countdownEl = document.getElementById("countdown");
 setInterval(updateCountdown, 1000);
@@ -78,9 +78,23 @@ function updateCountdown(){
     else
         countdownEl.innerHTML = "0"+mins.toString()+":0"+secs.toString();
     if(mins==0 && secs==0){
-        let message = new Message(0, "pass", null, username, opponentUsername);
-        sendWebSocket(message);
-        restartCountdown();
+        if (yourTurn)
+        {
+            failedTurnCounter++;
+            console.log("Turn failed: " + failedTurnCounter);
+            if (failedTurnCounter === 3) // CHANGE WITH CONFIGURATION PARAMETER
+            {
+                surrender();
+            }
+            else
+            {
+                let message = new Message(0, "pass", null, username, opponentUsername);
+                sendWebSocket(message);
+                restartCountdown();
+                yourTurn = !yourTurn;
+                printTurn();
+            }
+        }
         return;
     }
     time--;
