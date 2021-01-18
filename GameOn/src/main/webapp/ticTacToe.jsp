@@ -119,8 +119,9 @@
     {
         yourTurn = false;
     }
-
     printTurn(); // Initial print
+
+    let failedTurnCounter = 0; // The number of turns lost
 
     // Send a message to register who is the opponent
     waitForSocketConnection(ws, function(){
@@ -135,6 +136,7 @@
     {
         if (yourTurn)
         {
+            failedTurnCounter = 0;
             let obj = {};
             obj.row = parseInt(choice.toString().substring(0, 1));
             obj.column = parseInt(choice.toString().substring(1, 2));
