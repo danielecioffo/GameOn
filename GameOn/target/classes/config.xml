@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<it.unipi.dii.inginf.dsmt.gameon.config.ConfigurationParameters>
-    <pathDatabase>C:\Users\danyc\Documents\GITHUB\GameOn\GameOn\Database</pathDatabase>
-    <howManySecondsForEachTurn>15</howManySecondsForEachTurn>
-    <howManySkippedRoundsToStopTheGame>3</howManySkippedRoundsToStopTheGame>
-    <howManyUsersToSeeInTheRanking>5</howManyUsersToSeeInTheRanking>
-</it.unipi.dii.inginf.dsmt.gameon.config.ConfigurationParameters>

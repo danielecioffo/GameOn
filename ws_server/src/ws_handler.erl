@@ -44,6 +44,11 @@ websocket_handle ({text, Text}, State) ->
     Type == username_registration ->
       register(erlang:binary_to_atom(maps:get(<<"data">>, Map)), self()),
       NewState = State;
+    Type == online_list_registration ->
+      Name = element(2, erlang:process_info(self(), registered_name)),
+      Game = erlang:binary_to_atom(maps:get(<<"data">>, Map)),
+      online_users ! {Name, {Game, add}},
+      NewState = State;
     Type == opponent_registration ->
       NewState = {erlang:binary_to_atom(maps:get(<<"data">>, Map))}; %% register in the state the opponent
     true ->
@@ -90,5 +95,8 @@ terminate (TerminateReason, _Req, {OpponentUsername}) ->
 
 %% In case of empty state
 terminate (TerminateReason, _Req, {}) ->
+  Name = element(2, erlang:process_info(self(), registered_name)),
+  online_users ! {Name, {connect_four, remove}},
+  online_users ! {Name, {tic_tac_toe, remove}},
   io:format("Terminate reason: ~p\n", [TerminateReason]),
   ok.

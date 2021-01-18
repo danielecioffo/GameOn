@@ -94,6 +94,17 @@
         var username = '<%= myself.getUsername() %>';
         var gameName = '<% out.print(gameName);%>';
         initWebSocket(username);
+
+        waitForSocketConnection(ws, function(){ // registers the user in the list of online ones
+            let game;
+            if(gameName === "connectFour") {
+                game = 'connect_four';
+            } else if(gameName === 'ticTacToe') {
+                game = 'tic_tac_toe';
+            }
+            sendWebSocket(new Message(0, "online_list_registration", game , username, null));
+        });
+
         function sendGameRequest (to_username) // send a game request to this user
         {
             if (to_username !== username) // If the user has not clicked on himself
@@ -151,6 +162,9 @@
                 {
                     window.location.href = "ticTacToe.jsp?start=" + username + "&opponent="+sender;
                 }
+            } else if(jsonString.type === 'list_update')
+            {
+                //TODO aggiornare lista di utenti online
             }
         };
     </script>

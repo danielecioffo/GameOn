@@ -17,9 +17,13 @@ start(_StartType, _StartArgs) ->
         [{port, 8090}],
         #{env => #{dispatch => Dispatch}}
     ),
+    OnlineUsersServer = spawn(online_users_server, init_server, []),
+    register(online_users, OnlineUsersServer),
+    io:format("===> Booted online_users_server, PID ~w ~n", [OnlineUsersServer]),
     ws_server_sup:start_link().
 
 stop(_State) ->
+    online_users ! {self(), {stop}},
     ok.
 
 %% internal functions
