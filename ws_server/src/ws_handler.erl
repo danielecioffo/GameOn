@@ -48,9 +48,9 @@ websocket_handle ({text, Text}, State) ->
       Name = element(2, erlang:process_info(self(), registered_name)),
       Game = erlang:binary_to_atom(maps:get(<<"data">>, Map)),
       online_users ! {Name, {Game, add}},
-      NewState = State;
+      NewState = {game_name, Game};
     Type == opponent_registration ->
-      NewState = {erlang:binary_to_atom(maps:get(<<"data">>, Map))}; %% register in the state the opponent
+      NewState = {opponent_username, erlang:binary_to_atom(maps:get(<<"data">>, Map))}; %% register in the state the opponent
     true ->
       NewState = State,
       Receiver = erlang:binary_to_atom(maps:get(<<"receiver">>, Map)),
@@ -81,8 +81,8 @@ websocket_info(Info, State) ->
 %% stop -> The server close the connection
 %% remote -> The client close the connection
 
-%% In case we have registered an opponent
-terminate (TerminateReason, _Req, {OpponentUsername}) ->
+%% In case of termination in a game page
+terminate (TerminateReason, _Req, {opponent_username, OpponentUsername}) ->
   io:format("Terminate reason: ~p\n", [TerminateReason]),
   OpponentPID = whereis(OpponentUsername),
   if
@@ -93,10 +93,13 @@ terminate (TerminateReason, _Req, {OpponentUsername}) ->
         <<"sender">> => <<>>, <<"receiver">> => <<>>})
   end;
 
-%% In case of empty state
-terminate (TerminateReason, _Req, {}) ->
+%% In case of termination in a waiting room
+terminate (TerminateReason, _Req, {game_name, Game}) ->
   Name = element(2, erlang:process_info(self(), registered_name)),
-  online_users ! {Name, {connect_four, remove}},
-  online_users ! {Name, {tic_tac_toe, remove}},
+  online_users ! {Name, {Game, remove}},
   io:format("Terminate reason: ~p\n", [TerminateReason]),
-  ok.
+  ok;
+
+terminate (TerminateReason, _Req, {}) ->
+  io:format("Terminate reason: ~p\n", [TerminateReason]),
+  io:format("Terminate with empty state").
