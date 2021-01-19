@@ -1,4 +1,5 @@
 package it.unipi.dii.inginf.dsmt.gameon.servlet;
+import it.unipi.dii.inginf.dsmt.gameon.config.ConfigurationParameters;
 import it.unipi.dii.inginf.dsmt.gameon.listener.SessionManager;
 import it.unipi.dii.inginf.dsmt.gameon.model.User;
 import it.unipi.dii.inginf.dsmt.gameon.persistence.KeyValueDBDriver;
@@ -17,6 +18,7 @@ import java.util.List;
 @WebServlet(name = "ChooseGameServlet", value = "/chooseGame-servlet")
 public class ChooseGameServlet extends HttpServlet{
     private final KeyValueDBDriver keyValueDBDriver = KeyValueDBDriver.getInstance();
+    private static final ConfigurationParameters configurationParameters = ConfigurationParameters.getInstance();
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         processRequest(request, response);
@@ -40,9 +42,11 @@ public class ChooseGameServlet extends HttpServlet{
         HttpSession session = request.getSession();
 
         if(session.getAttribute("gameName").equals("ticTacToe"))
-            request.setAttribute("ranking", keyValueDBDriver.getTicTacToeRanking(5));  // TODO cambiare con parametro da ParametriDiConfigurazione
+            request.setAttribute("ranking", keyValueDBDriver.
+                    getTicTacToeRanking(configurationParameters.getHowManyUsersToSeeInTheRanking()));
         else
-            request.setAttribute("ranking", keyValueDBDriver.getConnectFourRanking(5)); // TODO cambiare con parametro da ParametriDiConfigurazione
+            request.setAttribute("ranking", keyValueDBDriver.
+                    getConnectFourRanking(configurationParameters.getHowManyUsersToSeeInTheRanking()));
 
         Utils.goToPage("gameSelected.jsp", request, response);
     }

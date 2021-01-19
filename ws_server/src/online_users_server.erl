@@ -37,6 +37,7 @@ server_loop(GameServers) ->
       server_loop(GameServers)
   end.
 
+
 %loop for the connect_four process
 connect_four_loop(Server, OnlineList) ->
   receive

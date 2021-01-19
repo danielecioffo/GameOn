@@ -279,24 +279,30 @@ for (const row of rows) {
 }
 
 // Timer
-const startingMinutes = 0.5;    //30 seconds
-let time = startingMinutes * 60;
+let time = startingSeconds;
 var countdownEl = document.getElementById("countdown");
 setInterval(updateCountdown, 1000);
 
 function updateCountdown(){
-    var mins = Math.floor(time / 60);
+    const mins = Math.floor(time / 60);
     let secs = time % 60;
-    if(secs>9)
-        countdownEl.innerHTML = "0"+mins.toString()+":"+secs.toString();
-    else
-        countdownEl.innerHTML = "0"+mins.toString()+":0"+secs.toString();
-    if(mins==0 && secs==0){
+    if(mins > 9) {
+        if (secs > 9)
+            countdownEl.innerHTML = mins + ":" + secs.toString();
+        else
+            countdownEl.innerHTML = mins + ":0" + secs.toString();
+    }else{
+        if(secs>9)
+            countdownEl.innerHTML = "0" + mins + ":" + secs.toString();
+        else
+            countdownEl.innerHTML = "0" + mins + ":0" + secs.toString();
+    }
+    if(mins == 0 && secs==0){
         if (yourTurn)
         {
-            failedTurnCounter++;
+            failedTurnCounter--;
             console.log("Turn failed: " + failedTurnCounter);
-            if (failedTurnCounter === 3) // CHANGE WITH CONFIGURATION PARAMETER
+            if (failedTurnCounter === 0)
             {
                 surrender();
             }
@@ -314,4 +320,4 @@ function updateCountdown(){
     time--;
 }
 
-function restartCountdown(){ time = startingMinutes * 60; }
+function restartCountdown(){ time = startingSeconds; }

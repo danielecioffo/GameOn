@@ -22,15 +22,16 @@ import static org.iq80.leveldb.impl.Iq80DBFactory.bytes;
  */
 public class KeyValueDBDriver {
     private static volatile KeyValueDBDriver instance; //Singleton instance
+    private static final ConfigurationParameters configurationParameters = ConfigurationParameters.getInstance();
     private DB db;
     private String pathDatabase;
 
     /**
      * Private constructor
      */
-    private KeyValueDBDriver(ConfigurationParameters configurationParameters)
+    private KeyValueDBDriver(String pathDatabase)
     {
-        this.pathDatabase = configurationParameters.getPathDatabase();
+        this.pathDatabase = pathDatabase;
         openDB();
     }
 
@@ -45,7 +46,7 @@ public class KeyValueDBDriver {
             {
                 if (instance == null)
                 {
-                    instance = new KeyValueDBDriver(Utils.readConfigurationParameters());
+                    instance = new KeyValueDBDriver(configurationParameters.getPathDatabase());
                 }
             }
         }
