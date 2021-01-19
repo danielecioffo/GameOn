@@ -11,6 +11,7 @@
     <%
         User myself = (User) session.getAttribute("loggedUser");
         String opponent = request.getParameter("opponent");
+        String color = request.getParameter("color");
     %>
     <body>
         <div id="overlay">
@@ -132,6 +133,7 @@
             const username = '<%= myself.getUsername() %>';
             initWebSocket(username);
             const opponentUsername = '<% out.print(opponent);%>';
+            const color = '<% out.print(color); %>';
             // Send a message to register who is the opponent
             waitForSocketConnection(ws, function(){
                 sendWebSocket(new Message(0, "opponent_registration", opponentUsername, username, null));
@@ -189,6 +191,10 @@
                 else if (jsonString.type === 'opponent_disconnected')
                 {
                     showEndOfGameMessage(opponentUsername + " disconnected!", "true");
+                }
+                else if (jsonString.type === "receiver_not_reachable")
+                {
+                    showEndOfGameMessage(opponentUsername + " not reachable!", "false");
                 }
                 else if (jsonString.type === 'pass')
                 {

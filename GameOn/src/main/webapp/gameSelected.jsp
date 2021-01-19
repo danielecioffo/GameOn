@@ -47,10 +47,15 @@
 <h1 class="center-text">Let's play:
 <%
     String gameName = (String) session.getAttribute("gameName");
-    if (gameName.equals("connectFour"))
+    int howManyMatches = 0;
+    if (gameName.equals("connectFour")) {
         out.println("Connect Four!");
-    else if (gameName.equals("ticTacToe"))
+        howManyMatches = (int) session.getAttribute("howManyMatchesConnectFour");
+    }
+    else if (gameName.equals("ticTacToe")) {
         out.println("Tic-Tac-Toe!");
+        howManyMatches = (int) session.getAttribute("howManyMatchesTicTacToe");
+    }
     User myself = (User) session.getAttribute("loggedUser");
 %>
 </h1>
@@ -88,6 +93,7 @@
     <script>
         var username = '<%= myself.getUsername() %>';
         var gameName = '<% out.print(gameName);%>';
+        let howManyMatches = parseInt('<% out.print(howManyMatches);%>');
         initWebSocket(username);
 
         waitForSocketConnection(ws, function(){ // registers the user in the list of online ones
@@ -115,10 +121,10 @@
             (
                 function () {
                     if (gameName === "connectFour")
-                        window.location.href = "connectFour.jsp?color=red&opponent="+to_username;
+                        goToConnectFourGame("red", to_username);
                     else if (gameName === "ticTacToe")
                     {
-                        window.location.href = "ticTacToe.jsp?start="+ to_username +"&opponent="+to_username;
+                        goToTicTacToeGame(to_username, to_username);
                     }
                 }, 500
             );
@@ -172,10 +178,10 @@
 
                 // Otherwise, the game starts
                 if (gameName === "connectFour")
-                    window.location.href = "connectFour.jsp?color=yellow&opponent="+sender;
+                    goToConnectFourGame("yellow", sender);
                 else if (gameName === "ticTacToe")
                 {
-                    window.location.href = "ticTacToe.jsp?start=" + username + "&opponent="+sender;
+                    goToTicTacToeGame(username, sender);
                 }
             } else if(jsonString.type === 'list_update') // The list of online users has changed
             {
@@ -212,6 +218,86 @@
                 }
             }
         };
+
+        /**
+         * Function used to go to the Tic-Tac-Toe game page
+         * @param color         My color
+         * @param opponent      The username of my opponent
+         */
+        function goToTicTacToeGame (start, opponent)
+        {
+            let form = document.createElement("form");
+            form.setAttribute('method',"post");
+            form.setAttribute('action',"game-servlet");
+
+            let startInput = document.createElement("input"); //input element, text
+            startInput.setAttribute('type',"text");
+            startInput.setAttribute('name', "start");
+            startInput.setAttribute('value', start);
+
+            let opponentInput = document.createElement("input"); //input element, text
+            opponentInput.setAttribute('type',"text");
+            opponentInput.setAttribute('name', "opponent");
+            opponentInput.setAttribute('value', opponent);
+
+            howManyMatches++;
+            let howManyMatchesInput = document.createElement("input");
+            howManyMatchesInput.setAttribute("type", "text");
+            howManyMatchesInput.setAttribute('name', "howManyMatches");
+            howManyMatchesInput.setAttribute('value', howManyMatches.toString());
+
+            let submit = document.createElement("submit");
+            submit.setAttribute('type',"submit");
+            submit.setAttribute('value',"submit");
+            submit.setAttribute('name', 'submitButton');
+
+            form.appendChild(startInput);
+            form.appendChild(opponentInput);
+            form.append(howManyMatchesInput)
+            form.appendChild(submit);
+            document.body.appendChild(form);
+            form.submit();
+        }
+
+        /**
+         * Function used to go to the Connect Four game page
+         * @param color         My color
+         * @param opponent      The username of my opponent
+         */
+        function goToConnectFourGame (color, opponent)
+        {
+            let form = document.createElement("form");
+            form.setAttribute('method',"post");
+            form.setAttribute('action',"game-servlet");
+
+            let startInput = document.createElement("input"); //input element, text
+            startInput.setAttribute('type',"text");
+            startInput.setAttribute('name', "color");
+            startInput.setAttribute('value', color);
+
+            let opponentInput = document.createElement("input"); //input element, text
+            opponentInput.setAttribute('type',"text");
+            opponentInput.setAttribute('name', "opponent");
+            opponentInput.setAttribute('value', opponent);
+
+            howManyMatches++;
+            let howManyMatchesInput = document.createElement("input");
+            howManyMatchesInput.setAttribute("type", "text");
+            howManyMatchesInput.setAttribute('name', "howManyMatches");
+            howManyMatchesInput.setAttribute('value', howManyMatches.toString());
+
+            let submit = document.createElement("submit");
+            submit.setAttribute('type',"submit");
+            submit.setAttribute('value',"submit");
+            submit.setAttribute('name', 'submitButton');
+
+            form.appendChild(startInput);
+            form.appendChild(opponentInput);
+            form.append(howManyMatchesInput)
+            form.appendChild(submit);
+            document.body.appendChild(form);
+            form.submit();
+        }
     </script>
 </body>
 </html>

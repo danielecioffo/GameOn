@@ -210,6 +210,10 @@
         {
             showEndOfGameMessage(opponentUsername + " disconnected!", "true");
         }
+        else if (jsonString.type === "receiver_not_reachable")
+        {
+            showEndOfGameMessage(opponentUsername + " not reachable!", "false");
+        }
         else if (jsonString.type === 'pass')
         {
             yourTurn = !yourTurn;

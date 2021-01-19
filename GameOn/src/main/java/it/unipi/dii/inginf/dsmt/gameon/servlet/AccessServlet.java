@@ -51,6 +51,10 @@ public class AccessServlet extends HttpServlet {
                     return;
                 }
             }
+
+            // to do only the first time, initialize at 0
+            session.setAttribute("howManyMatchesTicTacToe", 0);
+            session.setAttribute("howManyMatchesConnectFour", 0);
         }
 
         if (username != null)

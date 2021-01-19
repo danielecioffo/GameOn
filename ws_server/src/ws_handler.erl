@@ -57,7 +57,7 @@ websocket_handle ({text, Text}, State) ->
       ReceiverPID = whereis(Receiver),
       if
         ReceiverPID == undefined -> %% The receiver is disconnected
-          Response = jsx:encode(#{<<"code">> => 1, <<"type">> => <<"opponent_disconnected">>, <<"data">> => <<>>,
+          Response = jsx:encode(#{<<"code">> => 1, <<"type">> => <<"receiver_not_reachable">>, <<"data">> => <<>>,
             <<"sender">> => <<>>, <<"receiver">> => <<>>}),
           Sender ! Response;
         true -> %% No problem

@@ -24,11 +24,7 @@ const row5 = [allCells[35], allCells[36], allCells[37], allCells[38], allCells[3
 const rows = [row0, row1, row2, row3, row4, row5, topRow];
 
 
-// parameters
-const queryString = window.location.search;
-const urlParams = new URLSearchParams(queryString);
-const color = urlParams.get('color');
-const opponent = urlParams.get('opponent');
+const opponent = opponentUsername;
 
 // variables
 var yourTurn = false;
