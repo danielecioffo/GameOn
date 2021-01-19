@@ -104,12 +104,12 @@
         {
             if (to_username !== username) // If the user has not clicked on himself
             {
-                sendWebSocket(new Message(0, 'game_request', null, username, to_username))
+                sendWebSocket(new Message(0, 'game_request', gameName, username, to_username))
             }
         }
 
         function sendGameRequestAccepted (to_username) {
-            sendWebSocket(new Message(0, 'game_request_accepted', null, username, to_username));
+            sendWebSocket(new Message(0, 'game_request_accepted', gameName, username, to_username));
             // We need to wait some milliseconds, otherwise there can be some problems
             setTimeout
             (
@@ -134,6 +134,8 @@
             console.log("Message received");
             if (jsonString.type === 'game_request') // I have received a game request
             {
+                if(jsonString.data !== gameName) return;
+
                 var tr = document.createElement("TR");
 
                 var tdUsername = document.createElement("TD");
@@ -151,6 +153,8 @@
             }
             else if (jsonString.type === 'game_request_accepted')
             {
+                if(jsonString.data !== gameName) return;
+
                 if (gameName === "connectFour")
                     window.location.href = "connectFour.jsp?color=yellow&opponent="+sender;
                 else if (gameName === "ticTacToe")
@@ -178,6 +182,16 @@
 
                     tr.appendChild(td);
                     table.appendChild(tr);
+                }
+            } else if(jsonString.type === 'remove_requests') {
+                let table = document.getElementById("gameRequests");
+
+                for(let step = table.childNodes.length - 1; step > 1; step--) {
+                    let tr = table.childNodes.item(step);
+                    let td = tr.firstChild;
+                    if(td.textContent === jsonString.data) {
+                        table.removeChild(tr);
+                    }
                 }
             }
         };

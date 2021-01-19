@@ -48,6 +48,7 @@ connect_four_loop(Server, OnlineList) ->
     {From, remove} ->
       NewOnlineList = lists:delete(From, OnlineList),
       send_all(NewOnlineList),
+      send_all(NewOnlineList, From),
       io:format("Connect Four: ~s removed from the list of online users~n", [From]),
       io:format("==> Connect Four currently online users: ~w ~n", [NewOnlineList]),
       connect_four_loop(Server, NewOnlineList);
@@ -68,6 +69,7 @@ tic_tac_toe_loop(Server, OnlineList) ->
     {From, remove} ->
       NewOnlineList = lists:delete(From, OnlineList),
       send_all(NewOnlineList),
+      send_all(NewOnlineList, From),
       io:format("Tic-Tac-Toe: ~s removed from the list of online users~n", [From]),
       io:format("==> Tic-Tac-Toe currently online users: ~w ~n", [NewOnlineList]),
       tic_tac_toe_loop(Server, NewOnlineList);
@@ -81,6 +83,11 @@ send_all(List) ->
   send_all(List, List).
 
 send_all([], _) -> ok;
-send_all([First|Others], List) ->
-  First ! jsx:encode(#{<<"code">> => 0, <<"type">> => <<"list_update">>, <<"data">> => List, <<"sender">> => <<>>, <<"receiver">> => <<>>}),
-  send_all(Others, List).
+send_all([First|Others], Data) ->
+  if
+    (is_list(Data)) ->
+      First ! jsx:encode(#{<<"code">> => 0, <<"type">> => <<"list_update">>, <<"data">> => Data, <<"sender">> => <<>>, <<"receiver">> => <<>>});
+    true ->
+      First ! jsx:encode(#{<<"code">> => 0, <<"type">> => <<"remove_requests">>, <<"data">> => Data, <<"sender">> => <<>>, <<"receiver">> => <<>>})
+  end,
+  send_all(Others, Data).
