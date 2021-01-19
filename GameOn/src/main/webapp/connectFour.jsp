@@ -92,14 +92,6 @@
                 <p id="countdown" style="font-weight: bold; font-size: 40px"></p>
                 <p id="turn"></p>
             </div>
-
-<%--            <script>--%>
-<%--                const startingMinutes = 1.5;    //un min e mezzo di timer--%>
-<%--                let time = startingMinutes * 60;--%>
-<%--                var countdownEl = document.getElementById("countdown");--%>
-<%--                setInterval(updateCountdown, 1000);--%>
-<%--            </script>--%>
-
             <div class="footer">
                 <div class="wrapper">
                     <p class="title">Chatbox</p>

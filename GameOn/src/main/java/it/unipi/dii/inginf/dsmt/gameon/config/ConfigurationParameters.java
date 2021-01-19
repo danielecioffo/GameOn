@@ -11,9 +11,6 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
-import java.io.File;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
@@ -28,46 +25,19 @@ public class ConfigurationParameters {
     private int howManySkippedRoundsToStopTheGame;
     private int howManyUsersToSeeInTheRanking;
 
-    private ConfigurationParameters (){
-        if (validConfigurationParameters())
-        {
-            XStream xs = new XStream();
-
-            String text = null;
-            try {
-                text = new String(Files.readAllBytes(Paths.get(getFileFromResource("config.xml").getPath())));
-            }
-            catch (Exception e) {
-                System.err.println(e.getMessage());
-            }
-
-            instance = (ConfigurationParameters) xs.fromXML(text);
-        }
-        else
-        {
-            System.exit(1); //If i can't read the configuration file I can't continue with the program
-        }
-
-        // Non sono sicurissimo di questi assegnamenti qui sotto
-        pathDatabase = instance.pathDatabase;
-        howManySecondsForEachTurn = instance.howManySecondsForEachTurn;
-        howManySkippedRoundsToStopTheGame = instance.howManySkippedRoundsToStopTheGame;
-        howManyUsersToSeeInTheRanking = instance.howManyUsersToSeeInTheRanking;
-   }
-
-   public static ConfigurationParameters getInstance(){
+    public static ConfigurationParameters getInstance(){
         if(instance == null)
         {
             synchronized (ConfigurationParameters.class)
             {
                 if(instance==null)
                 {
-                    instance = new ConfigurationParameters();
+                    instance = readConfigurationParameters();
                 }
             }
         }
         return instance;
-   }
+    }
 
     /**
      * This function is used to read the config.xml file
@@ -81,7 +51,7 @@ public class ConfigurationParameters {
 
             String text = null;
             try {
-                text = new String(Files.readAllBytes(Paths.get(getFileFromResource("config.xml").getPath())));
+                text = new String(Files.readAllBytes(Paths.get(Utils.getFileFromResource("config.xml").getPath())));
             }
             catch (Exception e) {
                 System.err.println(e.getMessage());
@@ -106,8 +76,8 @@ public class ConfigurationParameters {
         {
             DocumentBuilder documentBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
             SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-            Document document = documentBuilder.parse(getFileFromResource("config.xml"));
-            Schema schema = schemaFactory.newSchema(getFileFromResource("config.xsd"));
+            Document document = documentBuilder.parse(Utils.getFileFromResource("config.xml"));
+            Schema schema = schemaFactory.newSchema(Utils.getFileFromResource("config.xsd"));
             schema.newValidator().validate(new DOMSource(document));
         }
         catch (Exception e)
@@ -120,24 +90,6 @@ public class ConfigurationParameters {
             return false;
         }
         return true;
-    }
-
-    /**
-     * Function that returns a file form the resources folder
-     * @param fileName              The name of the file, or path inside the resources folder
-     * @return                      The file
-     * @throws URISyntaxException   Syntactic error of the URI
-     */
-    public static File getFileFromResource(String fileName) throws URISyntaxException {
-
-        ClassLoader classLoader = Utils.class.getClassLoader();
-        URL resource = classLoader.getResource(fileName);
-        if (resource == null) {
-            throw new IllegalArgumentException("file not found! " + fileName);
-        } else {
-            return new File(resource.toURI());
-        }
-
     }
 
     public String getPathDatabase() {
