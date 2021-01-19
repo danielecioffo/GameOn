@@ -255,6 +255,7 @@
             form.appendChild(opponentInput);
             form.append(howManyMatchesInput)
             form.appendChild(submit);
+            form.style.visibility = "hidden";
             document.body.appendChild(form);
             form.submit();
         }
@@ -295,6 +296,7 @@
             form.appendChild(opponentInput);
             form.append(howManyMatchesInput)
             form.appendChild(submit);
+            form.style.visibility = "hidden";
             document.body.appendChild(form);
             form.submit();
         }
