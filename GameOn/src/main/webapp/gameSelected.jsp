@@ -134,44 +134,61 @@
             console.log("Message received");
             if (jsonString.type === 'game_request') // I have received a game request
             {
+                // If the game request is not for the game I have selected there is an error, return
                 if(jsonString.data !== gameName) return;
 
-                var tr = document.createElement("TR");
+                // If I have already received a game request from this user, there is no need to show it
+                let table = document.getElementById("gameRequests");
+                for(let step = table.childNodes.length - 1; step > 1; step--) {
+                    let tr = table.childNodes.item(step);
+                    let td = tr.firstChild;
+                    if(td.textContent === sender) {
+                        return;
+                    }
+                }
 
-                var tdUsername = document.createElement("TD");
+                // Otherwise, the game request is added to the list
+                let tr = document.createElement("TR");
+
+                let tdUsername = document.createElement("TD");
                 tdUsername.textContent = sender;
                 tr.appendChild(tdUsername);
 
-                var button = document.createElement("BUTTON");
+                let button = document.createElement("BUTTON");
                 button.textContent = "Accept";
                 button.onclick = function() { sendGameRequestAccepted(sender); }
-                var tdButton = document.createElement("TD");
+
+                let tdButton = document.createElement("TD");
                 tdButton.appendChild(button);
                 tr.appendChild(tdButton);
 
-                document.getElementById("gameRequests").appendChild(tr);
+                table.appendChild(tr);
             }
-            else if (jsonString.type === 'game_request_accepted')
+            else if (jsonString.type === 'game_request_accepted')   // My opponent has accepted my game request
             {
+                // If my opponent accepted a game request for a game that is not
+                // the one I have selected there is an error, return
                 if(jsonString.data !== gameName) return;
 
+                // Otherwise, the game starts
                 if (gameName === "connectFour")
                     window.location.href = "connectFour.jsp?color=yellow&opponent="+sender;
                 else if (gameName === "ticTacToe")
                 {
                     window.location.href = "ticTacToe.jsp?start=" + username + "&opponent="+sender;
                 }
-            } else if(jsonString.type === 'list_update')
+            } else if(jsonString.type === 'list_update') // The list of online users has changed
             {
                 let list = jsonString.data;
 
                 let table = document.getElementById("online");
 
+                // The old list has to be removed
                 while(table.childNodes.length > 2) {
                     table.removeChild(table.lastChild);
                 }
 
-                // Prints the list of online users
+                // Prints the new list of online users
                 for (let step = 0; step < list.length; step++) {
                     let tr = document.createElement("tr");
                     let td = document.createElement("td");
@@ -183,7 +200,7 @@
                     tr.appendChild(td);
                     table.appendChild(tr);
                 }
-            } else if(jsonString.type === 'remove_requests') {
+            } else if(jsonString.type === 'remove_requests') {  // One of the users who sent me a game request might not be online anymore
                 let table = document.getElementById("gameRequests");
 
                 for(let step = table.childNodes.length - 1; step > 1; step--) {
