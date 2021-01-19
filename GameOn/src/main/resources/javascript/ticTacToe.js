@@ -34,13 +34,10 @@ function initTicTacToe()
  */
 function setCell(cellNum)
 {
-    if(moves[cellNum]===0) //If the cell is free
-    {
         document.images['rc'+cellNum].src="resources/images/cross128.png";
         document.images['rc'+cellNum].alt=" X ";
         moves[cellNum]=1; // 1 indicates myself, 2 the opponent
         done++;
-    }
 }
 
 /**
