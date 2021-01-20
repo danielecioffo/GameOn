@@ -43,7 +43,7 @@ public class ConfigurationParameters {
      * This function is used to read the config.xml file
      * @return  ConfigurationParameters instance
      */
-    private static ConfigurationParameters readConfigurationParameters ()
+    private static ConfigurationParameters readConfigurationParameters()
     {
         if (validConfigurationParameters())
         {

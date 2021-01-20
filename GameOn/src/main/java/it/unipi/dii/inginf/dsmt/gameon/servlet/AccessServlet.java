@@ -1,6 +1,5 @@
 package it.unipi.dii.inginf.dsmt.gameon.servlet;
 
-import it.unipi.dii.inginf.dsmt.gameon.listener.SessionManager;
 import it.unipi.dii.inginf.dsmt.gameon.model.User;
 import it.unipi.dii.inginf.dsmt.gameon.persistence.KeyValueDBDriver;
 import it.unipi.dii.inginf.dsmt.gameon.utils.Utils;
@@ -13,12 +12,10 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.List;
 import java.util.regex.Pattern;
 
 @WebServlet(name = "AccessServlet", value = "/access-servlet")
 public class AccessServlet extends HttpServlet {
-    private final KeyValueDBDriver keyValueDBDriver = KeyValueDBDriver.getInstance();
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         processRequest(request, response);
@@ -36,73 +33,44 @@ public class AccessServlet extends HttpServlet {
         String username=request.getParameter("username");
         String password=request.getParameter("password");
 
+        KeyValueDBDriver keyValueDBDriver = KeyValueDBDriver.getInstance();
         HttpSession session = request.getSession();
-        SessionManager sessionManager =
-                (SessionManager) session.getServletContext().getAttribute("sessionManager");
-        if (session.getAttribute("loggedUser")==null)
-        {
-            List<User> usersOnline = sessionManager.getAllOnlineUsers();
-            for (User u: usersOnline
-            ) {
-                if(u.getUsername().equals(username)){
-                    System.out.println("User already logged in!");
-                    Utils.goToPage("index.jsp", request, response);
-                    out.println("<script>alert(\"User already logged in!\")</script>");
-                    return;
-                }
-            }
 
-            // to do only the first time, initialize at 0
-            session.setAttribute("howManyMatchesTicTacToe", 0);
-            session.setAttribute("howManyMatchesConnectFour", 0);
-        }
+        session.setAttribute("howManyMatchesTicTacToe", 0);
+        session.setAttribute("howManyMatchesConnectFour", 0);
 
-        if (username != null)
+        // If the user has required a login operation
+        if (request.getParameter("loginButton") != null)
         {
-            // If the user has required a login operation
-            if (request.getParameter("loginButton") != null)
+            User user = keyValueDBDriver.login(username, password);
+            if (user != null)
             {
-                User user = keyValueDBDriver.login(username, password);
-                if (user != null)
-                {
-//                    HttpSession session = request.getSession();
-                    session.setAttribute("loggedUser", user);
-                    Utils.goToPage("chooseGame.jsp", request, response);
-                }
-                else{
-                    out.print("Username or password wrong");
-                    Utils.goToPage("index.jsp", request, response);
-                }
-            }
-            else // If the user has required a register operation
-            {
-                if (keyValueDBDriver.isRegistered(username)) //The username is already in use
-                {
-                    System.out.println("Sorry, the username is already in use!");
-                    out.print("Sorry, the username is already in use!");
-                    Utils.goToPage("index.jsp", request, response);
-                } else {
-                    // If the username is correctly formatted
-                    if (Pattern.matches("^[a-zA-Z0-9_.]*$", username)) {
-                        keyValueDBDriver.register(username, password);
-//                        HttpSession session = request.getSession();
-                        session.setAttribute("loggedUser", new User(username, password, 0, 0));
-                        Utils.goToPage("chooseGame.jsp", request, response);
-                    } else {
-                        out.print("Username not valid! Please use alphanumeric chars, underscore and dot");
-                        Utils.goToPage("index.jsp", request, response);
-                    }
-                }
-            }
-        }
-        else
-        {
-            if (request.getSession().getAttribute("loggedUser") != null)
+                session.setAttribute("loggedUser", user);
                 Utils.goToPage("chooseGame.jsp", request, response);
-            else
+            }
+            else{
+                out.print("Username or password wrong");
                 Utils.goToPage("index.jsp", request, response);
+            }
         }
-
+        else // If the user has required a register operation
+        {
+            if (keyValueDBDriver.isRegistered(username)) //The username is already in use
+            {
+                out.print("Sorry, the username is already in use!");
+                Utils.goToPage("index.jsp", request, response);
+            } else {
+                // If the username is correctly formatted
+                if (Pattern.matches("^[a-zA-Z0-9_.]*$", username)) {
+                    keyValueDBDriver.register(username, password);
+                    session.setAttribute("loggedUser", new User(username, password, 0, 0));
+                    Utils.goToPage("chooseGame.jsp", request, response);
+                } else {
+                    out.print("Username not valid! Please use alphanumeric chars, underscore and dot");
+                    Utils.goToPage("index.jsp", request, response);
+                }
+            }
+        }
         out.close();
     }
 

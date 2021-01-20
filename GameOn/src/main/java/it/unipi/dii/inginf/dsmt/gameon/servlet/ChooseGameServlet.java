@@ -17,8 +17,6 @@ import java.util.List;
 
 @WebServlet(name = "ChooseGameServlet", value = "/chooseGame-servlet")
 public class ChooseGameServlet extends HttpServlet{
-    private final KeyValueDBDriver keyValueDBDriver = KeyValueDBDriver.getInstance();
-    private static final ConfigurationParameters configurationParameters = ConfigurationParameters.getInstance();
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         processRequest(request, response);
@@ -39,6 +37,8 @@ public class ChooseGameServlet extends HttpServlet{
             session.setAttribute("gameName", gameName);
         }
 
+        KeyValueDBDriver keyValueDBDriver = KeyValueDBDriver.getInstance();
+        ConfigurationParameters configurationParameters = ConfigurationParameters.getInstance();
         HttpSession session = request.getSession();
 
         if(session.getAttribute("gameName").equals("ticTacToe"))
