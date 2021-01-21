@@ -42,13 +42,31 @@ websocket_handle ({text, Text}, State) ->
   if
     %% Registration of this process with the atom of the username, this is useful for contacting him from other processes
     Type == username_registration ->
-      register(erlang:binary_to_atom(maps:get(<<"data">>, Map)), self()),
-      NewState = State;
+      SenderID = whereis(Sender),
+      if
+        SenderID =/= undefined -> %%user already logged in
+          Response = jsx:encode(#{<<"code">> => 1, <<"type">> => <<"sender_already_logged">>, <<"data">> => <<>>,
+            <<"sender">> => <<>>, <<"receiver">> => <<>>}),
+          NewState = State,
+          self() ! Response;
+        true ->
+          register(erlang:binary_to_atom(maps:get(<<"data">>, Map)), self()),
+          NewState = State
+      end;
     Type == online_list_registration ->
-      Name = element(2, erlang:process_info(self(), registered_name)),
-      Game = erlang:binary_to_atom(maps:get(<<"data">>, Map)),
-      online_users ! {Name, {Game, add}},
-      NewState = {game_name, Game};
+      Info = process_info(self(), registered_name),
+      if
+        Info == [] -> %%This scenario has not been implemented client side, no needed.
+          Response = jsx:encode(#{<<"code">> => 1, <<"type">> => <<"sender_already_in_list">>, <<"data">> => <<>>,
+            <<"sender">> => <<>>, <<"receiver">> => <<>>}),
+          NewState = State,
+          self() ! Response;
+        true ->
+          Name = element(2, erlang:process_info(self(), registered_name)),
+          Game = erlang:binary_to_atom(maps:get(<<"data">>, Map)),
+          online_users ! {Name, {Game, add}},
+          NewState = {game_name, Game}
+      end;
     Type == opponent_registration ->
       NewState = {opponent_username, erlang:binary_to_atom(maps:get(<<"data">>, Map))}; %% register in the state the opponent
     true ->
