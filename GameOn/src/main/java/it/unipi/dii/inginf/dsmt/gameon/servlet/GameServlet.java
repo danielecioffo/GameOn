@@ -25,12 +25,7 @@ public class GameServlet extends HttpServlet {
         PrintWriter out = response.getWriter();
         HttpSession session = request.getSession();
         String opponent = request.getParameter("opponent");
-        int howManyMatchesServer = 0;
-
-        if ((session.getAttribute("gameName") == null) || (session.getAttribute("loggedUser") == null)
-                || (session.getAttribute("howManyMatchesConnectFour") == null)
-                || (session.getAttribute("howManyMatchesTicTacToe") == null))
-            return;
+        int howManyMatchesServer = 0; // Value of howManyMatches on the server side
 
         if (session.getAttribute("gameName").equals("connectFour"))
         {

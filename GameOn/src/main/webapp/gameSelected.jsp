@@ -1,6 +1,4 @@
 <%@ page import="it.unipi.dii.inginf.dsmt.gameon.model.User" %>
-<%@ page import="jdk.jshell.execution.Util" %>
-<%@ page import="it.unipi.dii.inginf.dsmt.gameon.utils.Utils" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <html>
@@ -222,7 +220,7 @@
                 }
             } else if(jsonString.type === 'sender_already_logged'){
                 alert("Username already logged in!")
-                document.location = 'logout-servlet';
+                document.location.href = './logout-servlet';
             }
         };
 
