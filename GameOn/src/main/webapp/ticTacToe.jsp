@@ -6,8 +6,8 @@
 <head>
     <title>Tic-Tac-Toe</title>
     <link rel="icon" href="resources/images/Tic_Tac_Toe.png">
+    <link type="text/css" rel="stylesheet" href="resources/css/games.css">
     <link type="text/css" rel="stylesheet" href="resources/css/ticTacToe.css">
-    <link type="text/css" rel="stylesheet" href="resources/css/connectFourStyle.css">
     <link type="text/css" rel="stylesheet" href="resources/css/general.css">
 </head>
 <%

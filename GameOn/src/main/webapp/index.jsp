@@ -4,7 +4,6 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>GameOn</title>
-    <link type="text/css" rel="stylesheet" href="resources/css/welcomePage.css">
     <link href="resources/css/general.css" rel="stylesheet" type="text/css">
 </head>
 <body>

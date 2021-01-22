@@ -6,7 +6,8 @@
     <head>
         <title>Connect Four</title>
         <link rel="icon" href="resources/images/ConnectFour.png">
-        <link type="text/css" rel="stylesheet" href="resources/css/connectFourStyle.css">
+        <link type="text/css" rel="stylesheet" href="resources/css/games.css">
+        <link type="text/css" rel="stylesheet" href="resources/css/connectedFour.css">
         <link type="text/css" rel="stylesheet" href="resources/css/general.css">
     </head>
     <%
