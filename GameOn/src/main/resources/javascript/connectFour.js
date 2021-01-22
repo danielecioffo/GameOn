@@ -23,23 +23,13 @@ const row4 = [allCells[28], allCells[29], allCells[30], allCells[31], allCells[3
 const row5 = [allCells[35], allCells[36], allCells[37], allCells[38], allCells[39], allCells[40], allCells[41]];
 const rows = [row0, row1, row2, row3, row4, row5, topRow];
 
-
-const opponent = opponentUsername;
-
 // variables
 var yourTurn = false;
 var gameIsLive = true;
 var opponentColor = 'yellow';
 var winningText = "";
 
-if(color === 'yellow') {
-    yourTurn = true;
-    opponentColor = 'red';
-}
-
-printTurn();
-
-// Functions
+// Functions for the logic of the game
 const getClassListArray = (cell) => {
     const classList = cell.classList;
     return [...classList];
@@ -92,7 +82,7 @@ const checkWinningCells = (cells) => {
     for (const cell of cells) {
         cell.classList.add('win');
     }
-    winningText = yourTurn ? "You have won!" : opponent + " has won!";
+    winningText = yourTurn ? "You have won!" : opponentUsername + " has won!";
     return true;
 };
 
@@ -229,6 +219,14 @@ const checkStatusOfGame = (cell) => {
     winningText = "Game is a tie!";
 };
 
+// Web socket function
+function sendMove(to_username, cell) {
+    let obj = {};
+    [obj.row, obj.column] = getCellLocation(cell);
+    sendWebSocket(new Message(0, 'connect_four_move', obj, username, to_username));
+    restartCountdown();
+    failedTurnCounter = '<% out.print(configurationParameters.getHowManySkippedRoundsToStopTheGame());%>';
+}
 
 // Event Handlers
 const handleCellMouseOver = (e) => {
@@ -262,12 +260,36 @@ const handleCellClick = (e) => {
     printTurn();
     clearColorFromTop(colIndex);
 
-    sendMove(opponent, openCell);
+    sendMove(opponentUsername, openCell);
 
     if (!gameIsLive) {
         showEndOfGameMessage(winningText, "true");
     }
 };
+
+//
+// ----- INITIALIZATION OF THE GAME -----
+//
+
+// The first player is the yellow one
+if(color === 'yellow') {
+    yourTurn = true;
+    opponentColor = 'red';
+}
+
+// Opens the web socket
+initWebSocket(username);
+
+// Send a message to register who is the opponent
+waitForSocketConnection(ws, function(){
+    sendWebSocket(new Message(0, "opponent_registration", opponentUsername, username, null));
+});
+
+// First print
+printTurn();
+
+// Timer
+setInterval(updateCountdown, 1000);
 
 // Adding Event Listeners
 for (const row of rows) {
@@ -278,46 +300,47 @@ for (const row of rows) {
     }
 }
 
-// Timer
-let time = startingSeconds;
-var countdownEl = document.getElementById("countdown");
-setInterval(updateCountdown, 1000);
+// Override of the onMessage function written in webSocket.js
+ws.onmessage = function (event){
+    var jsonString = JSON.parse(event.data);
+    var sender = jsonString.sender;
+    if (jsonString.type === 'connect_four_move') {
+        console.log(sender + " made their move.");
 
-function updateCountdown(){
-    const mins = Math.floor(time / 60);
-    let secs = time % 60;
-    if(mins > 9) {
-        if (secs > 9)
-            countdownEl.innerHTML = mins + ":" + secs.toString();
-        else
-            countdownEl.innerHTML = mins + ":0" + secs.toString();
-    }else{
-        if(secs>9)
-            countdownEl.innerHTML = "0" + mins + ":" + secs.toString();
-        else
-            countdownEl.innerHTML = "0" + mins + ":0" + secs.toString();
-    }
-    if(mins == 0 && secs==0){
-        if (yourTurn)
-        {
-            failedTurnCounter--;
-            console.log("Turn failed: " + failedTurnCounter);
-            if (failedTurnCounter === 0)
-            {
-                surrender();
-            }
-            else
-            {
-                let message = new Message(0, "pass", null, username, opponentUsername);
-                sendWebSocket(message);
-                yourTurn = !yourTurn
-                printTurn();
-                restartCountdown();
-            }
+        const row = jsonString.data.row;
+        const column = jsonString.data.column;
+
+        const localCell = rows[row][column];
+        localCell.classList.add(opponentColor);
+
+        checkStatusOfGame(localCell);
+
+        yourTurn = !yourTurn;
+        printTurn();
+
+        if (!gameIsLive) {
+            showEndOfGameMessage(winningText, "false");
         }
-        return;
+        restartCountdown();
     }
-    time--;
-}
+    else if (jsonString.type === 'chat_message') {
+        let p = document.createElement("P");
+        let receivedMessage = jsonString.data;
+        let text = document.createTextNode(sender + ": " + receivedMessage);
+        p.appendChild(text);
+        p.className = "message-left";
+        chatBox.appendChild(p);
+    } else if (jsonString.type === 'surrender') { //the opponent surrender
+        showEndOfGameMessage(opponentUsername + " has surrendered!", "true");
+    } else if (jsonString.type === 'opponent_disconnected') {
+        showEndOfGameMessage(opponentUsername + " disconnected!", "true");
+    } else if (jsonString.type === "receiver_not_reachable") {
+        showEndOfGameMessage(opponentUsername + " not reachable!", "false");
+    } else if (jsonString.type === 'pass') {
+        yourTurn = !yourTurn;
+        printTurn();
+        restartCountdown();
+    }
+};
 
-function restartCountdown(){ time = startingSeconds; }
+

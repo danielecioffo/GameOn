@@ -61,46 +61,123 @@ function checkWinning (player)
     return won;
 }
 
-// Timer
-let time = startingSeconds;
-var countdownEl = document.getElementById("countdown");
-setInterval(updateCountdown, 1000);
+//
+// ----- INITIALIZATION OF THE GAME -----
+//
 
-function updateCountdown(){
-    const mins = Math.floor(time / 60);
-    let secs = time % 60;
-    if(mins > 9) {
-        if (secs > 9)
-            countdownEl.innerHTML = mins + ":" + secs.toString();
-        else
-            countdownEl.innerHTML = mins + ":0" + secs.toString();
-    }else{
-        if(secs>9)
-            countdownEl.innerHTML = "0" + mins + ":" + secs.toString();
-        else
-            countdownEl.innerHTML = "0" + mins + ":0" + secs.toString();
-    }
-    if(mins == 0 && secs==0){
-        if (yourTurn)
-        {
-            failedTurnCounter--;
-            console.log("Turn failed: " + failedTurnCounter);
-            if (failedTurnCounter === 0)
-            {
-                surrender();
-            }
-            else
-            {
-                let message = new Message(0, "pass", null, username, opponentUsername);
-                sendWebSocket(message);
-                yourTurn = !yourTurn
-                printTurn();
-                restartCountdown();
-            }
-        }
-        return;
-    }
-    time--;
+// Set who is starting
+if (start === opponentUsername)
+{
+    yourTurn = false;
 }
 
-function restartCountdown(){ time = startingSeconds; }
+// Initialize the game logic
+initTicTacToe();
+
+// Opens the web socket
+initWebSocket(username);
+
+// First print
+printTurn();
+
+// Timer
+setInterval(updateCountdown, 1000);
+
+// Send a message to register who is the opponent
+waitForSocketConnection(ws, function(){
+    sendWebSocket(new Message(0, "opponent_registration", opponentUsername, username, null));
+});
+
+/**
+ * Function used to send a move, called by the GUI
+ * @param choice    What cell has been chosen
+ */
+function sendMove (choice) //Row=1, Column=2 -> choice=12
+{
+    if (yourTurn && (moves[choice] === 0)) // 0 indicates that the cell is free
+    {
+        failedTurnCounter = '<% out.print(configurationParameters.getHowManySkippedRoundsToStopTheGame());%>';
+        let obj = {};
+        obj.row = parseInt(choice.toString().substring(0, 1));
+        obj.column = parseInt(choice.toString().substring(1, 2));
+        sendWebSocket(new Message(0, 'tic_tac_toe_move', obj, username, opponentUsername));
+
+        setCell(choice);
+        if (checkWinning(1))
+        {
+            showEndOfGameMessage("You have won!", "true");
+        }
+        else if (done > 8)
+        {
+            showEndOfGameMessage("Game is a tie!", "false");
+        }
+
+        yourTurn = !yourTurn;
+        printTurn();
+
+        restartCountdown();
+    }
+}
+
+/**
+ * Override of the onMessage function written in webSocket.js
+ * @param event     The event that leads to this handler
+ */
+ws.onmessage = function (event){
+    var jsonString = JSON.parse(event.data);
+    var sender = jsonString.sender;
+    if (jsonString.type === 'tic_tac_toe_move') {
+        console.log(sender + " made his move.");
+
+        const row = jsonString.data.row;
+        const column = jsonString.data.column;
+
+        // If row=1 and column=2, then choice = 12
+        const choice = String(row).concat(String(column));
+        document.images['rc' + choice].src = "resources/images/circle128.png";
+        document.images['rc' + choice].alt = "";
+        moves[choice]=2; //taken by the opponent
+        done++;
+
+        yourTurn = !yourTurn;
+        printTurn();
+
+        if (checkWinning(2))
+        {
+            showEndOfGameMessage("You have lost!", "false");
+        }
+        else if (done > 8)
+        {
+            showEndOfGameMessage("Game is a tie!", "false");
+        }
+
+        restartCountdown();
+    }
+    else if (jsonString.type === 'chat_message')
+    {
+        let p = document.createElement("P");
+        let receivedMessage = jsonString.data;
+        let text = document.createTextNode(sender + ": " + receivedMessage);
+        p.appendChild(text);
+        p.className = "message-left";
+        chatBox.appendChild(p);
+    }
+    else if (jsonString.type === 'surrender') //the opponent surrender
+    {
+        showEndOfGameMessage(opponentUsername + " has surrendered!", "true");
+    }
+    else if (jsonString.type === 'opponent_disconnected')
+    {
+        showEndOfGameMessage(opponentUsername + " disconnected!", "true");
+    }
+    else if (jsonString.type === "receiver_not_reachable")
+    {
+        showEndOfGameMessage(opponentUsername + " not reachable!", "false");
+    }
+    else if (jsonString.type === 'pass')
+    {
+        yourTurn = !yourTurn;
+        printTurn();
+        restartCountdown();
+    }
+};

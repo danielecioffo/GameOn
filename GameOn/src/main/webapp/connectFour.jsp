@@ -106,111 +106,21 @@
         </div>
         <script src="resources/javascript/webSocket.js"></script>
         <script>
-            function showEndOfGameMessage(message, value) {
-                if(document.getElementById("overlay").style.display === "block")
-                    return;
-                document.getElementById("text").textContent = message;
-                document.getElementById("overlay").style.display = "block";
-                document.getElementById("message-div").style.display = "block"
-                document.getElementById("goBackButton").value = value;
-                setTimeout(function() { document.getElementById("goBackButton").click(); }, 3000);
-            }
-
-            function printTurn() {
-                if(yourTurn) {
-                    document.getElementById("turn").textContent = "It's your turn!";
-                } else {
-                    document.getElementById("turn").textContent = "It's " + opponent + "'s turn!";
-                }
-            }
-
-            const username = '<%= myself.getUsername() %>';
-            initWebSocket(username);
-            const opponentUsername = '<% out.print(opponent);%>';
-
             //Time in seconds for the timer
             const startingSeconds = '<% out.print(configurationParameters.getHowManySecondsForEachTurn()); %>';
             //The number of turns lost (starting from n going to 0)
             let failedTurnCounter = '<% out.print(configurationParameters.getHowManySkippedRoundsToStopTheGame());%>';
 
+            // The color of the disc
             const color = '<% out.print(color); %>';
-            // Send a message to register who is the opponent
-            waitForSocketConnection(ws, function(){
-                sendWebSocket(new Message(0, "opponent_registration", opponentUsername, username, null));
-            });
 
-            // WebSocket functions
-            function sendMove(to_username, cell) {
-                let obj = {};
-                [obj.row, obj.column] = getCellLocation(cell);
-                sendWebSocket(new Message(0, 'connect_four_move', obj, username, to_username));
-                restartCountdown();
-                failedTurnCounter = '<% out.print(configurationParameters.getHowManySkippedRoundsToStopTheGame());%>';
-            }
-
-            /**
-             * Override of the onMessage function written in webSocket.js
-             * @param event     The event that leads to this handler
-             */
-            ws.onmessage = function (event){
-                var jsonString = JSON.parse(event.data);
-                var sender = jsonString.sender;
-                if (jsonString.type === 'connect_four_move') {
-                    console.log(sender + " made their move.");
-
-                    const row = jsonString.data.row;
-                    const column = jsonString.data.column;
-
-                    const localCell = rows[row][column];
-                    localCell.classList.add(opponentColor);
-
-                    checkStatusOfGame(localCell);
-
-                    yourTurn = !yourTurn;
-                    printTurn();
-
-                    if (!gameIsLive) {
-                        showEndOfGameMessage(winningText, "false");
-                    }
-                    restartCountdown();
-                }
-                else if (jsonString.type === 'chat_message')
-                {
-                    let p = document.createElement("P");
-                    let receivedMessage = jsonString.data;
-                    let text = document.createTextNode(sender + ": " + receivedMessage);
-                    p.appendChild(text);
-                    p.className = "message-left";
-                    chatBox.appendChild(p);
-                }
-                else if (jsonString.type === 'surrender') //the opponent surrender
-                {
-                    showEndOfGameMessage(opponentUsername + " has surrendered!", "true");
-                }
-                else if (jsonString.type === 'opponent_disconnected')
-                {
-                    showEndOfGameMessage(opponentUsername + " disconnected!", "true");
-                }
-                else if (jsonString.type === "receiver_not_reachable")
-                {
-                    showEndOfGameMessage(opponentUsername + " not reachable!", "false");
-                }
-                else if (jsonString.type === 'pass')
-                {
-                    yourTurn = !yourTurn;
-                    printTurn();
-                    restartCountdown();
-                }
-            };
-
-            function surrender ()
-            {
-                let message = new Message(0, "surrender", null, username, opponentUsername);
-                sendWebSocket(message);
-                showEndOfGameMessage("You have disconnected!", "false");
-            }
+            // Usernames of the two players
+            const username = '<%= myself.getUsername() %>';
+            const opponentUsername = '<% out.print(opponent);%>';
         </script>
         <script type="text/javascript" src="resources/javascript/chat.js"></script>
+        <script type="text/javascript" src="resources/javascript/timer.js"></script>
+        <script type="text/javascript" src="resources/javascript/gameInteraction.js"></script>
         <script type="text/javascript" src="resources/javascript/connectFour.js"></script>
     </body>
 </html>
