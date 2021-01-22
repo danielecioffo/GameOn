@@ -1,4 +1,4 @@
-ws_server
+web_server_erlang
 =====
 
 An OTP application

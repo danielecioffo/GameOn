@@ -102,7 +102,7 @@ public class KeyValueDBDriver {
      * Function that deletes the value given the key
      * @param key       Key of the tuple
      */
-    private void deleteValue (String key)
+    private void deleteValue(String key)
     {
         db.delete(bytes(key));
     }
@@ -112,7 +112,7 @@ public class KeyValueDBDriver {
      * @param username      Username of the user
      * @return              The user if he is in the database, otherwise null
      */
-    public User getUserFromUsername (final String username)
+    public User getUserFromUsername(final String username)
     {
         User user = null;
         String password = getValue("user:" + username + ":password");

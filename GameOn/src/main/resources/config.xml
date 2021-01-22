@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <it.unipi.dii.inginf.dsmt.gameon.config.ConfigurationParameters>
-    <pathDatabase>/home/francesco/Documenti/repo/GameOn/GameOn/Database</pathDatabase>
+    <pathDatabase>C:\Users\feder\IdeaProjects\GameOn\GameOn\Database</pathDatabase>
     <howManySecondsForEachTurn>90</howManySecondsForEachTurn>
     <howManySkippedRoundsToStopTheGame>3</howManySkippedRoundsToStopTheGame>
     <howManyUsersToSeeInTheRanking>5</howManyUsersToSeeInTheRanking>

@@ -3,7 +3,7 @@
 %% @end
 %%%-------------------------------------------------------------------
 
--module(ws_server_sup).
+-module(web_server_erlang_sup).
 
 -behaviour(supervisor).
 

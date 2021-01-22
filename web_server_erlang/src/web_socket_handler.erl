@@ -6,7 +6,7 @@
 %%% @end
 %%% Created : 30. dic 2020 23:45
 %%%-------------------------------------------------------------------
--module(ws_handler).
+-module(web_socket_handler).
 -author("danyc").
 
 %% API
