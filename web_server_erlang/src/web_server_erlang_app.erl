@@ -11,7 +11,7 @@
 
 start(_StartType, _StartArgs) ->
     Dispatch = cowboy_router:compile([
-        {'_', [{"/ws", handler, {} }]} %% {} initial state is an empty tuple
+        {'_', [{"/ws", web_socket_handler, {} }]} %% {} initial state is an empty tuple
     ]),
     {ok, _} = cowboy:start_clear(http_listener,
         [{port, 8090}],
