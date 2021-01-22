@@ -1,6 +1,5 @@
 package it.unipi.dii.inginf.dsmt.gameon.servlet;
 import it.unipi.dii.inginf.dsmt.gameon.config.ConfigurationParameters;
-import it.unipi.dii.inginf.dsmt.gameon.listener.SessionManager;
 import it.unipi.dii.inginf.dsmt.gameon.model.User;
 import it.unipi.dii.inginf.dsmt.gameon.persistence.KeyValueDBDriver;
 import it.unipi.dii.inginf.dsmt.gameon.utils.Utils;

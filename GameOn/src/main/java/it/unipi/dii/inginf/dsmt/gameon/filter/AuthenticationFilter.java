@@ -18,7 +18,6 @@ import java.io.PrintWriter;
             "ResultServlet"},
         urlPatterns = {"/chooseGame.jsp", "/gameSelected.jsp", "/connectFour.jsp", "/ticTacToe.jsp"})
 public class AuthenticationFilter implements Filter {
-    public void destroy() {}
 
     public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain) throws ServletException, IOException {
         HttpServletRequest request = (HttpServletRequest) req;
@@ -36,6 +35,4 @@ public class AuthenticationFilter implements Filter {
             out.println("</script>");
         }
     }
-
-    public void init(FilterConfig config) throws ServletException {}
 }

@@ -23,7 +23,6 @@ public class LogoutServlet extends HttpServlet {
     {
         response.setContentType("text/html");
         PrintWriter out = response.getWriter();
-        out.print("You are successfully logged out!");
 
         request.getRequestDispatcher("index.jsp").include(request, response);
 

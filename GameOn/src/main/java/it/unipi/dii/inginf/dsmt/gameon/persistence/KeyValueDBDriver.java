@@ -177,41 +177,6 @@ public class KeyValueDBDriver {
     }
 
     /**
-     * Utility method used to delete all database content
-     */
-    public void truncateDatabase() {
-        try (final DBIterator iterator = db.iterator()) {
-            for (iterator.seekToFirst(); iterator.hasNext(); iterator.next()) {
-                String key = asString(iterator.peekNext().getKey());
-                deleteValue(key);
-            }
-        } catch (final IOException e) {
-            System.out.println("Error truncating the database.");
-            e.printStackTrace();
-            closeDB();
-        }
-    }
-
-    /**
-     * Prints all the content of the database.
-     */
-    public void printDatabase() {
-        // iterate db content
-        try (DBIterator iterator = db.iterator()) {
-            for (iterator.seekToFirst(); iterator.hasNext(); iterator.next()) {
-                String key = asString(iterator.peekNext().getKey());
-                String value = asString(iterator.peekNext().getValue());
-                System.out.println(key + " -> " + value);
-            }
-            System.out.println();
-        } catch (IOException e) {
-            System.out.println("Error printing the database content.");
-            e.printStackTrace();
-            closeDB();
-        }
-    }
-
-    /**
      * Function that returns the ranking for Tris
      * @param limit number of records to be returned
      * @return  a sorted HashMap where the key is the username and the value is the number of wins

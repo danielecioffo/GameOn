@@ -12,8 +12,6 @@ import java.io.PrintWriter;
 
 @WebFilter(filterName = "AccessServletFilter", servletNames = {"AccessServlet"})
 public class AccessServletFilter implements Filter {
-    public void destroy() {
-    }
 
     public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain) throws ServletException, IOException {
         HttpServletRequest request = (HttpServletRequest) req;
@@ -39,9 +37,4 @@ public class AccessServletFilter implements Filter {
             out.println("</script>");
         }
     }
-
-    public void init(FilterConfig config) throws ServletException {
-
-    }
-
 }
