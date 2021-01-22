@@ -1,7 +1,7 @@
 web_server_erlang
 =====
 
-An OTP application
+Web server that handle the web socket requests done by the clients
 
 Build
 -----

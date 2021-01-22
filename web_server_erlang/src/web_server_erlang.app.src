@@ -1,5 +1,5 @@
 {application, web_server_erlang,
- [{description, "An OTP application"},
+ [{description, "Web server that handle the web socket requests done by the clients"},
   {vsn, "0.1.0"},
   {registered, []},
   {mod, {web_server_erlang_app, []}},

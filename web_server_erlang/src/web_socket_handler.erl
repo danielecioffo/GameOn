@@ -1,13 +1,13 @@
 %%%-------------------------------------------------------------------
 %%% @author Federica Baldi, Francesco Campilongo, Daniele Cioffo
-%%% @copyright (C) 2020, <COMPANY>
+%%% @copyright (C) 2020, <Group-04>
 %%% @doc
-%%%
+%%%       Handler for the web socket requests
 %%% @end
 %%% Created : 30. dic 2020 23:45
 %%%-------------------------------------------------------------------
 -module(web_socket_handler).
--author("danyc").
+-author("group-04").
 
 %% API
 -export([init/2, websocket_init/1, websocket_handle/2, websocket_info/2, terminate/3]).
@@ -19,13 +19,12 @@
 init (Req, State) ->
   io:format("Inside the init/2 callback.\n", []),
   {cowboy_websocket, Req, State,
-    %% No timeout, probably is better to insert a very long value, but not infinity, to handle the disconnection of the client
     #{idle_timeout => infinity}
   }.
 
 %% All websocket callback returns the tuple {[Frame], State}, where the first element is a list of frame
 %% this list of frame will be returned to the client
-%% It is also possible not to return anything, with {ok, State}
+%% It is also possible to return nothing, with {ok, State}
 %% The most used frame type are text and binary.
 websocket_init (State) ->
   io:format("Inside the websocket_init callback.\n", []),
@@ -36,47 +35,44 @@ websocket_init (State) ->
 websocket_handle ({text, Text}, State) ->
   io:format("Frame received: ~p\n", [Text]),
   Map = jsx:decode(Text, [return_maps]), %% Every message is a JSON text
-  %% JSX work with binary data!
+  %% JSX works with binary data!
   Type = erlang:binary_to_atom(maps:get(<<"type">>, Map)), %% << ... >> is the syntax for bit string, we cast it into an atom
   Sender = erlang:binary_to_atom(maps:get(<<"sender">>, Map)),
-  if
+  case Type of
     %% Registration of this process with the atom of the username, this is useful for contacting him from other processes
-    Type == username_registration ->
+    username_registration ->
       SenderID = whereis(Sender),
       if
-        SenderID =/= undefined -> %%user already logged in
-          Response = jsx:encode(#{<<"code">> => 1, <<"type">> => <<"sender_already_logged">>, <<"data">> => <<>>,
-            <<"sender">> => <<>>, <<"receiver">> => <<>>}),
+        SenderID =/= undefined -> %% user already logged in
+          Response = jsx:encode(#{<<"type">> => <<"sender_already_logged">>}),
           NewState = State,
           self() ! Response;
         true ->
           register(erlang:binary_to_atom(maps:get(<<"data">>, Map)), self()),
           NewState = State
       end;
-    Type == online_list_registration ->
+    online_list_registration ->
       Info = process_info(self(), registered_name),
       if
-        Info == [] -> %%This scenario has not been implemented client side, no needed.
-          Response = jsx:encode(#{<<"code">> => 1, <<"type">> => <<"sender_already_in_list">>, <<"data">> => <<>>,
-            <<"sender">> => <<>>, <<"receiver">> => <<>>}),
+        Info == [] -> %% If my process is not registered with the username, this means that another process is already registered with the same username
+          Response = jsx:encode(#{<<"type">> => <<"sender_already_in_list">>}),
           NewState = State,
           self() ! Response;
         true ->
-          Name = element(2, erlang:process_info(self(), registered_name)),
+          Name = element(2, Info),
           Game = erlang:binary_to_atom(maps:get(<<"data">>, Map)),
           online_users ! {Name, {Game, add}},
           NewState = {game_name, Game}
       end;
-    Type == opponent_registration ->
-      NewState = {opponent_username, erlang:binary_to_atom(maps:get(<<"data">>, Map))}; %% register in the state the opponent
-    true ->
+    opponent_registration ->
+      NewState = {opponent_username, erlang:binary_to_atom(maps:get(<<"data">>, Map))}; %% register the opponent in the state
+    _ -> %% all the other types of message
       NewState = State,
       Receiver = erlang:binary_to_atom(maps:get(<<"receiver">>, Map)),
       ReceiverPID = whereis(Receiver),
       if
         ReceiverPID == undefined -> %% The receiver is disconnected
-          Response = jsx:encode(#{<<"code">> => 1, <<"type">> => <<"receiver_not_reachable">>, <<"data">> => <<>>,
-            <<"sender">> => <<>>, <<"receiver">> => <<>>}),
+          Response = jsx:encode(#{<<"type">> => <<"receiver_not_reachable">>}),
           Sender ! Response;
         true -> %% No problem
           Receiver ! Text %% send the JSON structure to the receiver
@@ -104,20 +100,16 @@ terminate (TerminateReason, _Req, {opponent_username, OpponentUsername}) ->
   io:format("Terminate reason: ~p\n", [TerminateReason]),
   OpponentPID = whereis(OpponentUsername),
   if
-    OpponentPID == undefined -> %% The opponent is already disconnected
-      ok;
-    true -> %% No problem
-      OpponentPID ! jsx:encode(#{<<"code">> => 0, <<"type">> => <<"opponent_disconnected">>, <<"data">> => <<>>,
-        <<"sender">> => <<>>, <<"receiver">> => <<>>})
+    OpponentPID =/= undefined -> %% The opponent is not already disconnected
+      OpponentPID ! jsx:encode(#{<<"type">> => <<"opponent_disconnected">>})
   end;
 
 %% In case of termination in a waiting room
 terminate (TerminateReason, _Req, {game_name, Game}) ->
   Name = element(2, erlang:process_info(self(), registered_name)),
   online_users ! {Name, {Game, remove}},
-  io:format("Terminate reason: ~p\n", [TerminateReason]),
-  ok;
+  io:format("Terminate reason: ~p\n", [TerminateReason]);
 
 terminate (TerminateReason, _Req, {}) ->
   io:format("Terminate reason: ~p\n", [TerminateReason]),
-  io:format("Terminate with empty state").
+  io:format("Terminate with empty state ~n").
