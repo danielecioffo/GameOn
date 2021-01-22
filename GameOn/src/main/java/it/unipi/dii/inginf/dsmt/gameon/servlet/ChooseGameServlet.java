@@ -30,7 +30,7 @@ public class ChooseGameServlet extends HttpServlet{
             HttpSession session = request.getSession();
             String gameName = "ticTacToe";
             session.setAttribute("gameName", gameName);
-        } else if (request.getParameter("connectFourButton") != null){
+        }else if (request.getParameter("connectFourButton") != null){
             HttpSession session = request.getSession();
             String gameName = "connectFour";
             session.setAttribute("gameName", gameName);

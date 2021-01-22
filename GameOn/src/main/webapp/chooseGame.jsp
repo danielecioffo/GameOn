@@ -1,5 +1,4 @@
 <%@ page import="it.unipi.dii.inginf.dsmt.gameon.model.User" %>
-<%@ page import="it.unipi.dii.inginf.dsmt.gameon.listener.SessionManager" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <html>

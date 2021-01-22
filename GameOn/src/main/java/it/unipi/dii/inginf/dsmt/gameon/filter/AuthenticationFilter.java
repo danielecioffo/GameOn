@@ -19,6 +19,9 @@ import java.io.PrintWriter;
         urlPatterns = {"/chooseGame.jsp", "/gameSelected.jsp", "/connectFour.jsp", "/ticTacToe.jsp"})
 public class AuthenticationFilter implements Filter {
 
+    public void destroy() {
+    }
+
     public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain) throws ServletException, IOException {
         HttpServletRequest request = (HttpServletRequest) req;
         HttpServletResponse response = (HttpServletResponse) resp;
@@ -34,5 +37,9 @@ public class AuthenticationFilter implements Filter {
             out.println("document.location.href='./logout-servlet';"); // forced logout
             out.println("</script>");
         }
+    }
+
+    public void init(FilterConfig config) throws ServletException {
+
     }
 }
