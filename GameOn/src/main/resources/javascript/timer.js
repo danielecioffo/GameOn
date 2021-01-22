@@ -26,7 +26,7 @@ function updateCountdown(){
             }
             else
             {
-                let message = new Message(0, "pass", null, username, opponentUsername);
+                let message = new Message("pass", null, username, opponentUsername);
                 sendWebSocket(message);
                 yourTurn = !yourTurn
                 printTurn();

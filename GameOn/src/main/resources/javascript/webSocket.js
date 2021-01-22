@@ -1,13 +1,10 @@
-/**
- * This file contains the generic function to handle the websocket
- */
+// This file contains the generic function to handle the websocket
 
 /**
  * This class contains all the attribute of a Message sent and received on the web socket
  */
 class Message {
-    constructor(code, type, data, sender, receiver) {
-        this.code = code; // Code of the message, 0: all ok, 1: some errors
+    constructor(type, data, sender, receiver) {
         this.type = type; // Type of the message, explain the content of the message (or type of error)
         this.data = data; // Data contained in the message, can be an object
         this.sender = sender; // username of sender
@@ -29,7 +26,7 @@ function initWebSocket (username) {
     ws.onopen = function (event) {
         console.log('Connected');
         // At the beginning, send a message for registering the username
-        ws.send(JSON.stringify(new Message(0, "username_registration", username, username, null)));
+        ws.send(JSON.stringify(new Message("username_registration", username, username, null)));
     };
     ws.onmessage = function (event) {
         console.log(event.data);

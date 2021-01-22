@@ -20,7 +20,7 @@ function showEndOfGameMessage(message, value) {
 
 // The user decides to surrender
 function surrender () {
-    let message = new Message(0, "surrender", null, username, opponentUsername);
+    let message = new Message("surrender", null, username, opponentUsername);
     sendWebSocket(message);
     showEndOfGameMessage("You have disconnected!", "false");
 }

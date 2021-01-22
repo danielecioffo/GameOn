@@ -116,11 +116,14 @@
     let failedTurnCounter = '<% out.print(configurationParameters.getHowManySkippedRoundsToStopTheGame());%>';
 
     // Username of the two players
+
     const username = '<%= myself.getUsername() %>';
     const opponentUsername = '<% out.print(opponent);%>';
 
     //User that starts the game (first turn)
     const start = '<% out.print(start);%>';
+
+    let yourTurn = true;
 </script>
 <script type="text/javascript" src="resources/javascript/chat.js"></script>
 <script type="text/javascript" src="resources/javascript/timer.js"></script>

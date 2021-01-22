@@ -105,19 +105,19 @@
             } else if(gameName === 'ticTacToe') {
                 game = 'tic_tac_toe';
             }
-            sendWebSocket(new Message(0, "online_list_registration", game , username, null));
+            sendWebSocket(new Message("online_list_registration", game , username, null));
         });
 
         function sendGameRequest (to_username) // send a game request to this user
         {
             if (to_username !== username) // If the user has not clicked on himself
             {
-                sendWebSocket(new Message(0, 'game_request', gameName, username, to_username))
+                sendWebSocket(new Message('game_request', gameName, username, to_username))
             }
         }
 
         function sendGameRequestAccepted (to_username) {
-            sendWebSocket(new Message(0, 'game_request_accepted', gameName, username, to_username));
+            sendWebSocket(new Message('game_request_accepted', gameName, username, to_username));
             // We need to wait some milliseconds, otherwise there can be some problems
             setTimeout
             (

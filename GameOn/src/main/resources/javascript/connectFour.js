@@ -223,7 +223,7 @@ const checkStatusOfGame = (cell) => {
 function sendMove(to_username, cell) {
     let obj = {};
     [obj.row, obj.column] = getCellLocation(cell);
-    sendWebSocket(new Message(0, 'connect_four_move', obj, username, to_username));
+    sendWebSocket(new Message('connect_four_move', obj, username, to_username));
     restartCountdown();
     failedTurnCounter = '<% out.print(configurationParameters.getHowManySkippedRoundsToStopTheGame());%>';
 }
@@ -282,7 +282,7 @@ initWebSocket(username);
 
 // Send a message to register who is the opponent
 waitForSocketConnection(ws, function(){
-    sendWebSocket(new Message(0, "opponent_registration", opponentUsername, username, null));
+    sendWebSocket(new Message("opponent_registration", opponentUsername, username, null));
 });
 
 // First print

@@ -1,6 +1,6 @@
-var chatBox = document.getElementById("chatBox");
-var messageInput = document.getElementById("usermsg");
-var sendButton = document.getElementById("sendButton");
+let chatBox = document.getElementById("chatBox");
+let messageInput = document.getElementById("usermsg");
+let sendButton = document.getElementById("sendButton");
 
 sendButton.onclick = function () {
     let p = document.createElement("P");
@@ -10,7 +10,7 @@ sendButton.onclick = function () {
     chatBox.appendChild(p);
 
     // send the message
-    var message = new Message(0, "chat_message", messageInput.value, username, opponentUsername);
+    let message = new Message("chat_message", messageInput.value, username, opponentUsername);
     sendWebSocket(message);
 
     messageInput.value=''; // clear the input for the message

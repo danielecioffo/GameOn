@@ -1,5 +1,3 @@
-let yourTurn = true;
-
 let won, done; //done is the total number of move
 let moves=[];
 let choices=[11,12,13,21,22,23,31,32,33];
@@ -85,7 +83,7 @@ setInterval(updateCountdown, 1000);
 
 // Send a message to register who is the opponent
 waitForSocketConnection(ws, function(){
-    sendWebSocket(new Message(0, "opponent_registration", opponentUsername, username, null));
+    sendWebSocket(new Message("opponent_registration", opponentUsername, username, null));
 });
 
 /**
@@ -100,7 +98,7 @@ function sendMove (choice) //Row=1, Column=2 -> choice=12
         let obj = {};
         obj.row = parseInt(choice.toString().substring(0, 1));
         obj.column = parseInt(choice.toString().substring(1, 2));
-        sendWebSocket(new Message(0, 'tic_tac_toe_move', obj, username, opponentUsername));
+        sendWebSocket(new Message('tic_tac_toe_move', obj, username, opponentUsername));
 
         setCell(choice);
         if (checkWinning(1))
