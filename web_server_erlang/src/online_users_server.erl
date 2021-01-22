@@ -1,6 +1,6 @@
 %%%-------------------------------------------------------------------
 %%% @author Federica Baldi, Francesco Campilongo, Daniele Cioffo
-%%% @copyright (C) 2021, <COMPANY>
+%%% @copyright (C) 2021, <Group-04>
 %%% @doc
 %%% Server that handles the list of online users for all the games
 %%% supported by GameOn platform
@@ -8,7 +8,7 @@
 %%% Created : 18. gen 2021 15:12
 %%%-------------------------------------------------------------------
 -module(online_users_server).
--author("feder").
+-author("group-04").
 
 %% API
 -export([init_server/0]).
