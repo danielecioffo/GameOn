@@ -1,5 +1,7 @@
 package it.unipi.dii.inginf.dsmt.gameon.filter;
 
+import it.unipi.dii.inginf.dsmt.gameon.utils.Utils;
+
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
@@ -26,12 +28,8 @@ public class GameServletFilter implements Filter {
         {
             chain.doFilter(req, resp);
         }
-        else
-        {
-            out.println("<script type=\"text/javascript\">");
-            out.println("alert('Invalid operation');");
-            out.println("document.location.href='./logout-servlet';"); // forced logout
-            out.println("</script>");
+        else {
+            Utils.printErrorAlertAccessDenied(out);
         }
     }
 

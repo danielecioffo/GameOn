@@ -101,7 +101,9 @@ terminate (TerminateReason, _Req, {opponent_username, OpponentUsername}) ->
   OpponentPID = whereis(OpponentUsername),
   if
     OpponentPID =/= undefined -> %% The opponent is not already disconnected
-      OpponentPID ! jsx:encode(#{<<"type">> => <<"opponent_disconnected">>})
+      OpponentPID ! jsx:encode(#{<<"type">> => <<"opponent_disconnected">>});
+    true ->
+      ok
   end;
 
 %% In case of termination in a waiting room

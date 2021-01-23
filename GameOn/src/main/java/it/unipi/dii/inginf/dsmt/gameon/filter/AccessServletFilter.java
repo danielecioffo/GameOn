@@ -34,10 +34,7 @@ public class AccessServletFilter implements Filter {
         }
         else
         {
-            out.println("<script type=\"text/javascript\">");
-            out.println("alert('Invalid operation');");
-            out.println("document.location.href='./logout-servlet';"); // forced logout
-            out.println("</script>");
+            Utils.printErrorAlertAccessDenied(out);
         }
     }
 

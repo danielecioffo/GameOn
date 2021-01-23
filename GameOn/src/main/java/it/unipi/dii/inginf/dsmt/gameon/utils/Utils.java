@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.URISyntaxException;
 import java.net.URL;
 
@@ -37,5 +38,17 @@ public class Utils {
         } else {
             return new File(resource.toURI());
         }
+    }
+
+    /**
+     * Function used to show an alert with some text that explains the problem
+     * @param out       PrintWriter used to print on the document
+     */
+    public static void printErrorAlertAccessDenied (PrintWriter out)
+    {
+        out.println("<script type=\"text/javascript\">");
+        out.println("alert('Invalid operation!');");
+        out.println("document.location.href='./logout-servlet';"); // forced logout
+        out.println("</script>");
     }
 }

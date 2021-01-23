@@ -10,15 +10,8 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-/**
- * Filter used to avoid access if the user is not logged in
- */
-@WebFilter(filterName = "AuthenticationFilter",
-        servletNames = {"ChooseGameServlet", "GameServlet",
-            "ResultServlet"},
-        urlPatterns = {"/chooseGame.jsp", "/gameSelected.jsp", "/connectFour.jsp", "/ticTacToe.jsp"})
-public class AuthenticationFilter implements Filter {
-
+@WebFilter(filterName = "ChooseGameServletFilter", servletNames = {"ChooseGameServlet"})
+public class ChooseGameServletFilter implements Filter {
     public void destroy() {
     }
 
@@ -26,17 +19,18 @@ public class AuthenticationFilter implements Filter {
         HttpServletRequest request = (HttpServletRequest) req;
         HttpServletResponse response = (HttpServletResponse) resp;
         PrintWriter out = response.getWriter();
-
         HttpSession session = request.getSession();
-        if (session.getAttribute("loggedUser") != null)
+
+        if ((session.getAttribute("gameName") != null)
+                || (request.getParameter("ticTacToeButton") != null)
+                || (request.getParameter("connectFourButton") != null))
             chain.doFilter(req, resp);
         else
-        {
             Utils.printErrorAlertAccessDenied(out);
-        }
     }
 
     public void init(FilterConfig config) throws ServletException {
 
     }
+
 }
