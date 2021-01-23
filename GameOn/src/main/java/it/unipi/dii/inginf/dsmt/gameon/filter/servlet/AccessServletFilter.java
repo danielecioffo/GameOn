@@ -1,4 +1,4 @@
-package it.unipi.dii.inginf.dsmt.gameon.filter;
+package it.unipi.dii.inginf.dsmt.gameon.filter.servlet;
 
 import it.unipi.dii.inginf.dsmt.gameon.utils.Utils;
 
@@ -10,8 +10,8 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-@WebFilter(filterName = "GameServletFilter", servletNames = {"GameServlet"})
-public class GameServletFilter implements Filter {
+@WebFilter(filterName = "AccessServletFilter", servletNames = {"AccessServlet"})
+public class AccessServletFilter implements Filter {
 
     public void destroy() {
     }
@@ -22,15 +22,22 @@ public class GameServletFilter implements Filter {
         HttpSession session = request.getSession();
         PrintWriter out = response.getWriter();
 
-        if ((session.getAttribute("gameName") != null) && (session.getAttribute("loggedUser") != null)
-                && (session.getAttribute("howManyMatchesConnectFour") != null)
-                && (session.getAttribute("howManyMatchesTicTacToe") != null))
+        if ((request.getParameter("username") != null) && (request.getParameter("password") != null) &&
+                ((request.getParameter("loginButton") != null) || (request.getParameter("registerButton") != null)))
         {
+            // Only the first time i need to do the login process
             chain.doFilter(req, resp);
         }
-        else {
+        else if (session.getAttribute("loggedUser") != null)
+        {
+            Utils.goToPage("chooseGame.jsp", request, response);
+        }
+        else
+        {
             Utils.printErrorAlertAccessDenied(out);
         }
+
+        out.close();
     }
 
     public void init(FilterConfig config) throws ServletException {

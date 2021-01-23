@@ -1,4 +1,4 @@
-package it.unipi.dii.inginf.dsmt.gameon.filter;
+package it.unipi.dii.inginf.dsmt.gameon.filter.servlet;
 
 import it.unipi.dii.inginf.dsmt.gameon.utils.Utils;
 
@@ -27,6 +27,8 @@ public class ChooseGameServletFilter implements Filter {
             chain.doFilter(req, resp);
         else
             Utils.printErrorAlertAccessDenied(out);
+
+        out.close();
     }
 
     public void init(FilterConfig config) throws ServletException {

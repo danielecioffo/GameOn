@@ -12,6 +12,7 @@
     <h1 class="center-text">Welcome <%
         User myself = (User) session.getAttribute("loggedUser");
         out.println(myself.getUsername() + "!");
+        session.setAttribute("gameName", null);
     %> </h1>
     <div style="width: 50%; margin: 0 auto">
         <div class="imgcontainer">
