@@ -10,6 +10,9 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+/**
+ * Filter used to avoid access on ChooseGameServlet if it is not necessary
+ */
 @WebFilter(filterName = "ChooseGameServletFilter", servletNames = {"ChooseGameServlet"})
 public class ChooseGameServletFilter implements Filter {
     public void destroy() {
