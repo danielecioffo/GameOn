@@ -10,6 +10,9 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+/**
+ * Filter used to avoid access on AccessServlet if it is not necessary
+ */
 @WebFilter(filterName = "AccessServletFilter", servletNames = {"AccessServlet"})
 public class AccessServletFilter implements Filter {
 

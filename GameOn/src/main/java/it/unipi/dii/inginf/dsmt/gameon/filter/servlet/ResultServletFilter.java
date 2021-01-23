@@ -9,6 +9,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+/**
+ * Filter used to avoid access on ResultServlet if it is not necessary
+ */
 @WebFilter(filterName = "ResultServletFilter", servletNames = {"ResultServlet"})
 public class ResultServletFilter implements Filter {
 

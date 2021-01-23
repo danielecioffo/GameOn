@@ -7,6 +7,9 @@ import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
+/**
+ * Filter used to avoid direct access to some .jsp page
+ */
 @WebFilter(filterName = "DenyAccessFilter", urlPatterns = {"/ticTacToe.jsp", "/connectFour.jsp", "/gameSelected.jsp"})
 public class DenyAccessFilter implements Filter {
     public void destroy() {

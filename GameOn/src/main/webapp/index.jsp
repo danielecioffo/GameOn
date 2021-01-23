@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>GameOn</title>
     <link href="resources/css/general.css" rel="stylesheet" type="text/css">
+    <link rel="icon" type="image/png" href="resources/images/icon.png"/>
 </head>
 <body>
 
