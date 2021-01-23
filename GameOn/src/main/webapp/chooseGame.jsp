@@ -18,7 +18,7 @@
         <div class="imgcontainer">
             <img src='resources/images/icon.png' alt="App Icon" width="75%">
         </div>
-        <form action="chooseGame-servlet" class="formStyle" method="post">
+        <form action="chooseGame-servlet" method="post">
         <button class="mainButton" name="ticTacToeButton" value="ticTacToe">Tic-Tac-Toe</button>
         <button class="mainButton" name="connectFourButton" value="connectFour">Connect Four</button>
         </form>

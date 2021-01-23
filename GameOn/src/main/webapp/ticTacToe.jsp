@@ -20,7 +20,7 @@
 <div id="overlay">
     <div id="message-div">
         <p id="text">Message to show</p>
-        <form action="result-servlet" id="form" class="formStyle" method="post">
+        <form action="result-servlet" id="form" method="post">
             <button class="goBackButton" id="goBackButton" name="hasWonTicTacToe" value="false">Go Back to Tic-Tac-Toe Lobby</button>
         </form>
     </div>

@@ -7,7 +7,7 @@
         <title>Connect Four</title>
         <link rel="icon" href="resources/images/ConnectFour.png">
         <link type="text/css" rel="stylesheet" href="resources/css/games.css">
-        <link type="text/css" rel="stylesheet" href="resources/css/connectedFour.css">
+        <link type="text/css" rel="stylesheet" href="resources/css/connectFour.css">
         <link type="text/css" rel="stylesheet" href="resources/css/general.css">
     </head>
     <%
@@ -20,7 +20,7 @@
         <div id="overlay">
             <div id="message-div">
                 <p id="text">Text to show</p>
-                <form action="result-servlet" id="form" class="formStyle" method="post">
+                <form action="result-servlet" id="form" method="post">
                     <button class="goBackButton" id="goBackButton" name="hasWonConnectFour" value="false">Go Back to Connect Four Lobby</button>
                 </form>
             </div>
