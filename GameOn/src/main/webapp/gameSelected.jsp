@@ -6,41 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Waiting for a match</title>
     <link href="resources/css/general.css" rel="stylesheet" type="text/css">
-    <style type="text/css">
-        table{
-            border-collapse: collapse;
-            font-size: 20px;
-            text-align: center;
-        }
-
-        td, th {
-            border: 1px solid #ddd;
-            padding: 8px;
-        }
-
-        th {
-            padding-top: 12px;
-            padding-bottom: 12px;
-            text-align: left;
-            background-color: #3399ff;
-            color: white;
-        }
-
-
-        td{
-            padding-left: 10px;
-            padding-right: 10px;
-        }
-
-        #ranking tr:nth-child(even) {
-            background-color: #e8f0fe;
-        }
-
-        #online tr:hover {
-            background-color: #e8f0fe;
-            cursor: pointer;
-        }
-    </style>
 </head>
 <body>
 <button onclick = "window.location.href='./logout-servlet'">Logout</button>
@@ -60,14 +25,14 @@
 %>
 </h1>
 <h2 class="center-text">Waiting for a match</h2>
-    <div style="width: 50%; margin: 0 auto" class="center-text">
-        <div class="center-text" style="min-width: 345px">
-            <table id="online" style="float: left; margin-right:10px">
+    <div class="center-text, divFifty">
+        <div class="center-text, minWidth">
+            <table id="online" class="floatTableLeft">
                 <tr>
                     <th>Username</th>
                 </tr>
             </table>
-            <table id="ranking" style="float: right">
+            <table id="ranking" class="floatTableRight">
                 <tr>
                     <th>Username</th>
                     <th>Ranking</th>
@@ -82,9 +47,9 @@
             <button class="mainButton" onclick = "window.location.href='chooseGame.jsp'">Go back to the List of Games</button>
         </div>
     </div>
-    <div style="width: 50%; margin: 0 auto" class="center-text">
+    <div class="center-text, divFifty">
         <h2>Game requests received: </h2>
-        <table id="gameRequests" style="align: center; margin: auto">
+        <table id="gameRequests" class="centerTable">
             <tr>
                 <th>Username</th>
                 <th>Accept</th>

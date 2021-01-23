@@ -18,14 +18,52 @@ body {font-family: Arial, Helvetica, sans-serif;}
     text-align: center;
 }
 
-body {font-family: Arial, Helvetica, sans-serif;}
-.divForm {
+.divFifty {
     width: 50%;
     margin: 0 auto;
 }
-form {border: 3px solid #f1f1f1;}
+.formStyle {border: 3px solid #f1f1f1;}
 
-input[type=text], input[type=password] {
+.centerTable{
+    align: center;
+    margin: auto;
+}
+
+table{
+    border-collapse: collapse;
+    font-size: 20px;
+    text-align: center;
+}
+
+td, th {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color: #3399ff;
+    color: white;
+}
+
+
+td{
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+#ranking tr:nth-child(even) {
+    background-color: #e8f0fe;
+}
+
+#online tr:hover {
+    background-color: #e8f0fe;
+    cursor: pointer;
+}
+
+.inputWidth{
     width: 100%;
     padding: 12px 20px;
     margin: 8px 0;
@@ -52,14 +90,15 @@ img.icon {
     text-align: center;
 }
 
-/*---------------------- CHAT -----------------*/
-.message-left{
-    float: left;
-    width: 75%;
-    text-align: left;
+.minWidth{
+    min-width: 345px;
 }
-.message-right{
+
+.floatTableLeft{
+    float: left;
+    margin: 10px;
+}
+
+.floatTableRight{
     float: right;
-    width: 75%;
-    text-align: right;
 }

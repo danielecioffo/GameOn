@@ -128,3 +128,20 @@ input[type=text] {
     margin: 0 auto;
     overflow: auto;
 }
+
+.countdown{
+    font-weight: bold;
+    font-size: 40px;
+}
+
+/*---------------------- CHAT -----------------*/
+.message-left{
+    float: left;
+    width: 75%;
+    text-align: left;
+}
+.message-right{
+    float: right;
+    width: 75%;
+    text-align: right;
+}

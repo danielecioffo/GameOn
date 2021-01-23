@@ -14,11 +14,11 @@
         out.println(myself.getUsername() + "!");
         session.setAttribute("gameName", null);
     %> </h1>
-    <div style="width: 50%; margin: 0 auto">
+    <div class="divFifty">
         <div class="imgcontainer">
             <img src='resources/images/icon.png' alt="App Icon" width="75%">
         </div>
-        <form action="chooseGame-servlet" method="post">
+        <form action="chooseGame-servlet" class="formStyle" method="post">
         <button class="mainButton" name="ticTacToeButton" value="ticTacToe">Tic-Tac-Toe</button>
         <button class="mainButton" name="connectFourButton" value="connectFour">Connect Four</button>
         </form>

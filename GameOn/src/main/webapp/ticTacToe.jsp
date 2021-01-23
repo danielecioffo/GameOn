@@ -20,7 +20,7 @@
 <div id="overlay">
     <div id="message-div">
         <p id="text">Message to show</p>
-        <form action="result-servlet" id="form" method="post">
+        <form action="result-servlet" id="form" class="formStyle" method="post">
             <button class="goBackButton" id="goBackButton" name="hasWonTicTacToe" value="false">Go Back to Tic-Tac-Toe Lobby</button>
         </form>
     </div>
@@ -91,7 +91,7 @@
     <div class="right">
         <h1>Tic-Tac-Toe</h1>
         <p>Time left:</p>
-        <p id="countdown" style="font-weight: bold; font-size: 40px"></p>
+        <p id="countdown" class="countdown"></p>
         <p id="turn"></p>
         <button class ="mainButton" type="button" onclick="surrender()">Surrender</button>
     </div>
