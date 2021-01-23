@@ -1,13 +1,7 @@
 <component name="ArtifactManager">
   <artifact type="war" name="GameOn:war">
-    <output-path>$PROJECT_DIR$/target</output-path>
-    <properties id="maven-jee-properties">
-      <options>
-        <module>GameOn</module>
-        <packaging>war</packaging>
-      </options>
-    </properties>
-    <root id="archive" name="GameOn-1.0-SNAPSHOT.war">
+    <output-path>$PROJECT_DIR$/out/artifacts/GameOn_war</output-path>
+    <root id="archive" name="GameOn_war.war">
       <element id="artifact" artifact-name="GameOn:war exploded" />
     </root>
   </artifact>

@@ -113,7 +113,9 @@
     //Time in seconds for the timer
     const startingSeconds = '<% out.print(configurationParameters.getHowManySecondsForEachTurn()); %>'
     //The number of turns lost (starting from n going to 0)
-    let failedTurnCounter = '<% out.print(configurationParameters.getHowManySkippedRoundsToStopTheGame());%>';
+    const totalTurnFallible = '<% out.print(configurationParameters.getHowManySkippedRoundsToStopTheGame());%>';
+
+    let failedTurnCounter = parseInt(totalTurnFallible);
 
     // Username of the two players
 

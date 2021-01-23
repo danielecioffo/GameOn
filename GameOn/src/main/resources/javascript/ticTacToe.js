@@ -94,7 +94,7 @@ function sendMove (choice) //Row=1, Column=2 -> choice=12
 {
     if (yourTurn && (moves[choice] === 0)) // 0 indicates that the cell is free
     {
-        failedTurnCounter = '<% out.print(configurationParameters.getHowManySkippedRoundsToStopTheGame());%>';
+        failedTurnCounter = parseInt(totalTurnFallible);
         let obj = {};
         obj.row = parseInt(choice.toString().substring(0, 1));
         obj.column = parseInt(choice.toString().substring(1, 2));

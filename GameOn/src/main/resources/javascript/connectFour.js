@@ -225,7 +225,7 @@ function sendMove(to_username, cell) {
     [obj.row, obj.column] = getCellLocation(cell);
     sendWebSocket(new Message('connect_four_move', obj, username, to_username));
     restartCountdown();
-    failedTurnCounter = '<% out.print(configurationParameters.getHowManySkippedRoundsToStopTheGame());%>';
+    failedTurnCounter = parseInt(totalTurnFallible);
 }
 
 // Event Handlers

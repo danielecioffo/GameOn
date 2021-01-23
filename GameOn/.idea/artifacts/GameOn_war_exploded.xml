@@ -1,13 +1,6 @@
 <component name="ArtifactManager">
   <artifact type="exploded-war" name="GameOn:war exploded">
-    <output-path>$PROJECT_DIR$/target/GameOn-1.0-SNAPSHOT</output-path>
-    <properties id="maven-jee-properties">
-      <options>
-        <exploded>true</exploded>
-        <module>GameOn</module>
-        <packaging>war</packaging>
-      </options>
-    </properties>
+    <output-path>$PROJECT_DIR$/out/artifacts/GameOn_war_exploded</output-path>
     <root id="root">
       <element id="directory" name="WEB-INF">
         <element id="directory" name="classes">
@@ -22,14 +15,12 @@
           <element id="library" level="project" name="Maven: xpp3:xpp3_min:1.1.4c" />
           <element id="library" level="project" name="Maven: javax.servlet:jstl:1.2" />
         </element>
+        <element id="directory" name="resources">
+          <element id="dir-copy" path="$PROJECT_DIR$/src/main/resources" />
+        </element>
       </element>
-      <element id="directory" name="META-INF">
-        <element id="file-copy" path="$PROJECT_DIR$/target/GameOn-1.0-SNAPSHOT/META-INF/MANIFEST.MF" />
-      </element>
+      <element id="library" level="project" name="Java EE 6-Java EE 6" />
       <element id="javaee-facet-resources" facet="GameOn/web/Web" />
-      <element id="directory" name="resources">
-        <element id="dir-copy" path="$PROJECT_DIR$/src/main/resources" />
-      </element>
     </root>
   </artifact>
 </component>
