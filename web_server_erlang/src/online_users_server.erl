@@ -88,8 +88,8 @@ send_all([], _) -> ok;
 send_all([First|Others], Data) ->
   if
     (is_list(Data)) ->  %% if it is a list, it means that the list of online users has been updated
-      First ! jsx:encode(#{<<"code">> => 0, <<"type">> => <<"list_update">>, <<"data">> => Data, <<"sender">> => <<>>, <<"receiver">> => <<>>});
+      First ! jsx:encode(#{<<"type">> => <<"list_update">>, <<"data">> => Data});
     true -> %% otherwise, it is the username of a user who is no longer online
-      First ! jsx:encode(#{<<"code">> => 0, <<"type">> => <<"remove_requests">>, <<"data">> => Data, <<"sender">> => <<>>, <<"receiver">> => <<>>})
+      First ! jsx:encode(#{<<"type">> => <<"remove_requests">>, <<"data">> => Data})
   end,
   send_all(Others, Data).
