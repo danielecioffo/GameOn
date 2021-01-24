@@ -26,8 +26,8 @@
 %>
 </h1>
 <h2 class="center-text">Waiting for a match</h2>
-    <div class="center-text, divFifty">
-        <div class="center-text, minWidth">
+    <div class="divFifty">
+        <div class="center-text minWidth">
             <table id="online" class="floatTableLeft">
                 <tr>
                     <th>Username</th>
@@ -48,7 +48,7 @@
             <button class="mainButton" onclick = "window.location.href='chooseGame.jsp'">Go back to the List of Games</button>
         </div>
     </div>
-    <div class="center-text, divFifty">
+    <div class="center-text divFifty">
         <h2>Game requests received: </h2>
         <table id="gameRequests" class="centerTable">
             <tr>
