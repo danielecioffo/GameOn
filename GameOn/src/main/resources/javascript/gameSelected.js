@@ -1,9 +1,12 @@
 //
 //  ------ PAGE INITIALIZATION ------
 //
+
+// Opens the web socket
 initWebSocket(username);
 
-waitForSocketConnection(ws, function(){ // registers the user in the list of online ones
+// Registers the user in the list of online ones
+waitForSocketConnection(ws, function(){
     let game;
     if(gameName === "connectFour") {
         game = 'connect_four';
@@ -14,6 +17,11 @@ waitForSocketConnection(ws, function(){ // registers the user in the list of onl
 });
 
 // FUNCTIONS
+
+/**
+ * Function that sends a game request to the user passed as parameter
+ * @param to_username   username of the user we want to sent a game request to
+ */
 function sendGameRequest (to_username) // send a game request to this user
 {
     if (to_username !== username) // If the user has not clicked on himself
@@ -22,6 +30,10 @@ function sendGameRequest (to_username) // send a game request to this user
     }
 }
 
+/**
+ * Function that sends a game request approval to the user passed as parameter
+ * @param to_username   username of the user we want to accept the game request from
+ */
 function sendGameRequestAccepted (to_username) {
     sendWebSocket(new Message('game_request_accepted', gameName, username, to_username));
     // We need to wait some milliseconds, otherwise there can be some problems

@@ -1,4 +1,6 @@
-// Prints whose turn it is
+/**
+ * Function that prints whose turn it is
+ */
 function printTurn() {
     if(yourTurn) {
         document.getElementById("turn").textContent = "It's your turn!";
@@ -7,7 +9,11 @@ function printTurn() {
     }
 }
 
-// Shows a message at the end of the game
+/**
+ * Function that shows a message at the end of the game, stating the results
+ * @param message   message to be displayed
+ * @param value false if the opponent has won
+ */
 function showEndOfGameMessage(message, value) {
     if(document.getElementById("overlay").style.display === "block")
         return;
@@ -18,7 +24,9 @@ function showEndOfGameMessage(message, value) {
     setTimeout(function() { document.getElementById("goBackButton").click(); }, 3000);
 }
 
-// The user decides to surrender
+/**
+ * Function that is called when the player decides to surrender (by clicking on the "Surrender" button)
+ */
 function surrender () {
     let message = new Message("surrender", null, username, opponentUsername);
     sendWebSocket(message);

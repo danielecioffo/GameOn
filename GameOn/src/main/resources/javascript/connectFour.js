@@ -2,7 +2,7 @@
 const allCells = document.querySelectorAll('.cell:not(.row-top)');
 const topCells = document.querySelectorAll('.cell.row-top');
 
-// columns
+// Columns
 const column0 = [allCells[35], allCells[28], allCells[21], allCells[14], allCells[7], allCells[0], topCells[0]];
 const column1 = [allCells[36], allCells[29], allCells[22], allCells[15], allCells[8], allCells[1], topCells[1]];
 const column2 = [allCells[37], allCells[30], allCells[23], allCells[16], allCells[9], allCells[2], topCells[2]];
@@ -13,7 +13,7 @@ const column6 = [allCells[41], allCells[34], allCells[27], allCells[20], allCell
 const columns = [column0, column1, column2, column3, column4, column5, column6];
 
 
-// rows
+// Rows
 const topRow = [topCells[0], topCells[1], topCells[2], topCells[3], topCells[4], topCells[5], topCells[6]];
 const row0 = [allCells[0], allCells[1], allCells[2], allCells[3], allCells[4], allCells[5], allCells[6]];
 const row1 = [allCells[7], allCells[8], allCells[9], allCells[10], allCells[11], allCells[12], allCells[13]];
@@ -23,18 +23,28 @@ const row4 = [allCells[28], allCells[29], allCells[30], allCells[31], allCells[3
 const row5 = [allCells[35], allCells[36], allCells[37], allCells[38], allCells[39], allCells[40], allCells[41]];
 const rows = [row0, row1, row2, row3, row4, row5, topRow];
 
-// variables
+// Variables
 var yourTurn = false;
 var gameIsLive = true;
 var opponentColor = 'yellow';
 var winningText = "";
 
 // Functions for the logic of the game
+/**
+ * Function that returns the classList of the cell passed as parameter
+ * @param cell  cell whose classList we want to retrieve
+ * @returns {*[]}   classList
+ */
 const getClassListArray = (cell) => {
     const classList = cell.classList;
     return [...classList];
 };
 
+/**
+ * Function that returns the location of the cell passed as parameter
+ * @param cell  cell whose location we want to retrieve
+ * @returns {[number, number]}  location: [row, column]
+ */
 const getCellLocation = (cell) => {
     const classList = getClassListArray(cell);
 
@@ -48,6 +58,11 @@ const getCellLocation = (cell) => {
     return [rowNumber, colNumber];
 };
 
+/**
+ * Function that returns the first free cell in a column
+ * @param colIndex  column where we want to place the new disc
+ * @returns {null|Element}  the open cell if it exists (null otherwise)
+ */
 const getFirstOpenCellForColumn = (colIndex) => {
     const column = columns[colIndex];
     const columnWithoutTop = column.slice(0, 6);
@@ -62,12 +77,21 @@ const getFirstOpenCellForColumn = (colIndex) => {
     return null;
 };
 
+/**
+ * Function that removes the color from the top part of the grid
+ * @param colIndex  column from which we want to remove the color
+ */
 const clearColorFromTop = (colIndex) => {
     const topCell = topCells[colIndex];
     topCell.classList.remove('yellow');
     topCell.classList.remove('red');
 };
 
+/**
+ * Function that returns the color the disc in a cell, if present
+ * @param cell  cell whose color we want to retrieve
+ * @returns {string|null}   the color of the disc if present (null otherwise)
+ */
 const getColorOfCell = (cell) => {
     const classList = getClassListArray(cell);
     if (classList.includes('yellow')) return 'yellow';
@@ -75,6 +99,11 @@ const getColorOfCell = (cell) => {
     return null;
 };
 
+/**
+ * Function that checks if the cells passed as parameter are a winning set
+ * @param cells cells to be checked
+ * @returns {boolean}   true if there is a winner
+ */
 const checkWinningCells = (cells) => {
     if (cells.length < 4) return false;
 
@@ -86,6 +115,10 @@ const checkWinningCells = (cells) => {
     return true;
 };
 
+/**
+ * Function to be called when we want to check if someone has won
+ * @param cell  cell that has been changed
+ */
 const checkStatusOfGame = (cell) => {
     const color = getColorOfCell(cell);
     if (!color) return;
@@ -220,6 +253,11 @@ const checkStatusOfGame = (cell) => {
 };
 
 // Web socket function
+/**
+ * Function that sends a game move to the opponent
+ * @param to_username   opponent username
+ * @param cell  cell where the user has placed the disc
+ */
 function sendMove(to_username, cell) {
     let obj = {};
     [obj.row, obj.column] = getCellLocation(cell);
@@ -229,6 +267,10 @@ function sendMove(to_username, cell) {
 }
 
 // Event Handlers
+/**
+ * Function that handles Mouse Over action on a cell
+ * @param e event
+ */
 const handleCellMouseOver = (e) => {
     if (!gameIsLive || !yourTurn) return;
     const cell = e.target;
@@ -238,12 +280,20 @@ const handleCellMouseOver = (e) => {
     topCell.classList.add(color);
 };
 
+/**
+ * Function that handles Mouse Out action on a cell
+ * @param e event
+ */
 const handleCellMouseOut = (e) => {
     const cell = e.target;
     const [rowIndex, colIndex] = getCellLocation(cell);
     clearColorFromTop(colIndex);
 };
 
+/**
+ * Function that handles Click action on a cell
+ * @param e event
+ */
 const handleCellClick = (e) => {
     if (!gameIsLive || !yourTurn) return;
     const cell = e.target;
@@ -300,7 +350,10 @@ for (const row of rows) {
     }
 }
 
-// Override of the onMessage function written in webSocket.js
+/**
+ * Override of the onMessage function written in webSocket.js
+ * @param event     The event that leads to this handler
+ */
 ws.onmessage = function (event){
     var jsonString = JSON.parse(event.data);
     var sender = jsonString.sender;
