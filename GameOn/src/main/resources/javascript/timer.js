@@ -1,6 +1,9 @@
 let time = startingSeconds;
 let countdownEl = document.getElementById("countdown");
 
+/**
+ * Function that updates the countdown
+ */
 function updateCountdown(){
     const mins = Math.floor(time / 60);
     let secs = time % 60;
@@ -38,4 +41,7 @@ function updateCountdown(){
     time--;
 }
 
+/**
+ * Function that restarts the countdown
+ */
 function restartCountdown(){ time = startingSeconds; }

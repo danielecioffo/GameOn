@@ -1,7 +1,11 @@
+// DOM Elements
 let chatBox = document.getElementById("chatBox");
 let messageInput = document.getElementById("usermsg");
 let sendButton = document.getElementById("sendButton");
 
+/**
+ * Functions that sends a chat message to the opponent when the sendButton is clicked
+ */
 sendButton.onclick = function () {
     let p = document.createElement("P");
     let text = document.createTextNode(username + ": " + messageInput.value);
