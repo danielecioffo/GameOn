@@ -11,6 +11,9 @@ import org.iq80.leveldb.WriteBatch;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
+import java.util.stream.StreamSupport;
 
 import static java.lang.Integer.parseInt;
 import static org.iq80.leveldb.impl.Iq80DBFactory.*;
@@ -172,7 +175,6 @@ public class KeyValueDBDriver {
             db.write(batch);
         } catch (final IOException e) {
             e.printStackTrace();
-            closeDB();
         }
     }
 
@@ -207,60 +209,28 @@ public class KeyValueDBDriver {
 
         //Iterate DB Content
         try (DBIterator iterator = db.iterator()) {
-            for (iterator.seekToFirst(); iterator.hasNext(); iterator.next()) {
-                String key = asString(iterator.peekNext().getKey());
+            StreamSupport.stream(
+                    Spliterators.spliteratorUnknownSize(iterator, Spliterator.NONNULL), false) //NONNULL: the entry are all non-null
+                    .parallel() // Parallel computation
+                    .forEach(entry -> {
+                        String key = asString(entry.getKey());
+                        // Check if it is the game wins record
+                        if (key.contains(gameWins)) {
+                            String userWins = asString(entry.getValue());
 
-                // Check if it is the game wins record
-                if (key.contains(gameWins)) {
-                    String userWins = asString(iterator.peekNext().getValue());
+                            // user:'username':'game'Wins" -> parts[1] = username
+                            String[] parts = key.split(":");
+                            final String username = parts[1];
 
-                    // user:'username':'game'Wins" -> parts[1] = username
-                    String[] parts = key.split(":");
-                    final String username = parts[1];
-
-                    usersWins.put(username, parseInt(userWins));
-                }
-            }
+                            usersWins.put(username, parseInt(userWins));
+                        }
+                    });
         } catch (IOException e) {
             e.printStackTrace();
         }
 
         // There is no direct way to sort a HashMap by values, see sortHashMap implementation
-        return sortHashMap(usersWins, limit);
-    }
-
-    /**
-     * Function that sorts an HashMap on descending order on values of Integer types
-     * Code adapted from: https://www.java67.com/2015/01/how-to-sort-hashmap-in-java-based-on.html#ixzz6hp389MJ5
-     * @param hashMap   HashMap to be sorted in descending order on values
-     * @param limit number of records to be returned
-     * @return  a sorted HashMap
-     */
-    public static HashMap<String, Integer> sortHashMap(HashMap<String, Integer> hashMap, int limit) {
-        Comparator<Map.Entry<String, Integer>> valueComparator = (o1, o2) -> {
-            Integer i1 = o1.getValue();
-            Integer i2 = o2.getValue();
-            return i2.compareTo(i1);
-        };
-
-        Set<Map.Entry<String, Integer>> entries = hashMap.entrySet();
-
-        // Sort method needs a List, so let's first convert Set to List in Java
-        List<Map.Entry<String, Integer>> listOfEntries = new ArrayList<>(entries);
-
-        // sorting HashMap by values using comparator
-        listOfEntries.sort(valueComparator);
-        HashMap<String, Integer> sortedByValue = new LinkedHashMap<>(listOfEntries.size());
-
-        // copying entries from List to Map with limited records
-        int i = 0;
-        for (Map.Entry<String, Integer> entry : listOfEntries) {
-            if(i >= limit) break;
-            sortedByValue.put(entry.getKey(), entry.getValue());
-            i++;
-        }
-
-        return sortedByValue;
+        return Utils.sortHashMap(usersWins, limit);
     }
 
     /**

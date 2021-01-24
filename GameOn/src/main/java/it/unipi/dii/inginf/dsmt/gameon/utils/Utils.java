@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.*;
 
 /**
  * Class with utility functions
@@ -50,5 +51,43 @@ public class Utils {
         out.println("alert('Invalid operation!');");
         out.println("document.location.href='./logout-servlet';"); // forced logout
         out.println("</script>");
+    }
+
+    /**
+     * Function that sorts an HashMap on descending order on values of Integer types
+     * @param hashMap   HashMap to be sorted in descending order on values
+     * @param limit number of records to be returned
+     * @return  a sorted HashMap
+     */
+    public static HashMap<String, Integer> sortHashMap(HashMap<String, Integer> hashMap, int limit) {
+        if (hashMap == null)
+        {
+            return null;
+        }
+
+        Comparator<Map.Entry<String, Integer>> valueComparator = (o1, o2) -> {
+            Integer i1 = o1.getValue();
+            Integer i2 = o2.getValue();
+            return i2.compareTo(i1);
+        };
+
+        Set<Map.Entry<String, Integer>> entries = hashMap.entrySet();
+
+        // Sort method needs a List, so let's first convert Set to List in Java
+        List<Map.Entry<String, Integer>> listOfEntries = new ArrayList<>(entries);
+
+        // sorting HashMap by values using comparator
+        listOfEntries.sort(valueComparator);
+        HashMap<String, Integer> sortedByValue = new LinkedHashMap<>(listOfEntries.size());
+
+        // copying entries from List to Map with limited records
+        int i = 0;
+        for (Map.Entry<String, Integer> entry : listOfEntries) {
+            if(i >= limit) break;
+            sortedByValue.put(entry.getKey(), entry.getValue());
+            i++;
+        }
+
+        return sortedByValue;
     }
 }
