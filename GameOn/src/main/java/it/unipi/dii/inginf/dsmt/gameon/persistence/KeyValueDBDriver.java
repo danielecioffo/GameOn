@@ -167,15 +167,7 @@ public class KeyValueDBDriver {
      */
     public void register (final String username, final String password)
     {
-        // I do all the operations in a batch, for the atomicity property
-        try (WriteBatch batch = db.createWriteBatch()) {
-            batch.put(bytes("user:" + username + ":password"), bytes(password));
-            batch.put(bytes("user:" + username + ":ticTacToeWins"), bytes(String.valueOf(0)));
-            batch.put(bytes("user:" + username + ":connectFourWins"), bytes(String.valueOf(0)));
-            db.write(batch);
-        } catch (final IOException e) {
-            e.printStackTrace();
-        }
+        putValue("user:" + username + ":password", password);
     }
 
     /**
@@ -256,7 +248,11 @@ public class KeyValueDBDriver {
         String key = "user:" + username + ":" + game + "Wins";
 
         String value = getValue(key);
-        int wins = Integer.parseInt(value) + 1;
+        int wins = 1; // First time wins = 1
+        if (value != null) // If there are some victories recorded in the DB
+        {
+            wins = Integer.parseInt(value) + 1;
+        }
 
         putValue(key, String.valueOf(wins));
     }
