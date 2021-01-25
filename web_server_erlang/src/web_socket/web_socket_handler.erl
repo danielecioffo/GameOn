@@ -78,9 +78,7 @@ websocket_handle ({text, Text}, State) ->
           Receiver ! Text %% send the JSON structure to the receiver
       end
   end,
-  {ok, NewState};
-
-websocket_handle (_, State) -> {ok, State}.
+  {ok, NewState}.
 
 %% The websocket_info/2 callback is called when we use the ! operator
 %% So Cowboy will call websocket_info/2 whenever an Erlang message arrives.
