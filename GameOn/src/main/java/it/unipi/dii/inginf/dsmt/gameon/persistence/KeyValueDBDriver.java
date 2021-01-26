@@ -6,13 +6,10 @@ import it.unipi.dii.inginf.dsmt.gameon.utils.Utils;
 import org.iq80.leveldb.DB;
 import org.iq80.leveldb.DBIterator;
 import org.iq80.leveldb.Options;
-import org.iq80.leveldb.WriteBatch;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
-import java.util.function.Consumer;
-import java.util.function.Predicate;
 import java.util.stream.StreamSupport;
 
 import static java.lang.Integer.parseInt;
@@ -122,9 +119,13 @@ public class KeyValueDBDriver {
         // If this user is present in the DB
         if (password != null)
         {
-            user = new User(username, password,
-                    parseInt(getValue("user:" + username + ":ticTacToeWins")),
-                    parseInt(getValue("user:" + username + ":connectFourWins")));
+            user = new User(username, password);
+            String value = getValue("user:" + username + ":ticTacToeWins");
+            if (value != null)
+                user.setTicTacToeWins(parseInt(value));
+            value = getValue("user:" + username + ":connectFourWins");
+            if (value != null)
+                user.setConnectFourWins(parseInt(value));
         }
         return user;
     }

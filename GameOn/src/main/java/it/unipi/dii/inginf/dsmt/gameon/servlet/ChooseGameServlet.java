@@ -24,6 +24,8 @@ public class ChooseGameServlet extends HttpServlet{
     }
 
     private void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+        response.setContentType("text/html");
         if(request.getParameter("ticTacToeButton") != null)
         {
             HttpSession session = request.getSession();

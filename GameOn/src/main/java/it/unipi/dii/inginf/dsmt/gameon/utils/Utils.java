@@ -16,6 +16,14 @@ import java.util.*;
  */
 public class Utils {
 
+    /**
+     * Function that with the dispatcher send the user to another page
+     * @param page          Page to show
+     * @param request       Request object
+     * @param response      Response object
+     * @throws ServletException
+     * @throws IOException
+     */
     public static void goToPage (String page, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         RequestDispatcher requestDispatcher = request.getRequestDispatcher(page);
         if (requestDispatcher != null)

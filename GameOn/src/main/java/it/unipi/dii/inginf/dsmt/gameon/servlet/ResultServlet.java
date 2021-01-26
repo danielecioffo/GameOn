@@ -21,6 +21,9 @@ public class ResultServlet extends HttpServlet {
     }
 
     private void processRequest(HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+        response.setContentType("text/html");
+
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("loggedUser");
 

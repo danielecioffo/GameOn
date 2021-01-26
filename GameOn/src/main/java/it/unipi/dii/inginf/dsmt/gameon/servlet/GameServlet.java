@@ -22,6 +22,8 @@ public class GameServlet extends HttpServlet {
     }
 
     private void processRequest(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+
+        response.setContentType("text/html");
         PrintWriter out = response.getWriter();
         HttpSession session = request.getSession();
         String opponent = request.getParameter("opponent");
