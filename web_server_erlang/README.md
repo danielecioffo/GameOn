@@ -7,3 +7,8 @@ Build
 -----
 
     $ rebar3 compile
+
+Execute
+-----
+
+    $ rebar3 shell
