@@ -3,7 +3,5 @@ Repository for group project of Distributed Systems and Middleware Technologies
 
 Execute
 -----
-Commands for executing the project on Windows
-
-    $ start cmd.exe /c "cd PATH_TO_WEB_SERVER_ERLANG && call rebar3 shell" 
-    $ start cmd.exe /c "cd PATH_TO_BIN_FOLDER_ON_TOMCAT && call startup.bat" 
+To start the application on windows you can use the startGameOn.bat file, first changing the path to those of your system. 
+Similar commands can be used on Unix systems, but there is no ready-made execution script
