@@ -8,8 +8,9 @@ In the GameOn folder you will find the javaEE project that has be deployed on To
 
 Execute
 -----
-First you have to load the war folder on the TomCat web server (in the webapps folder) and change the config.xml file in resources (if you want), then you can start TomCat and the CowBoy web server.
+First you have to load the GameOn_war folder on the TomCat web server (in the webapps folder), then you can start TomCat and the CowBoy web server.
 Then, to access the web app, type the following address on your browser: http://localhost:8080/GameOn_war/
+Note: if you want change the config.xml file, you need to change it in GameOn_war/WEB-INF/classes/config.xml
 
 To start the application on windows you can use the startGameOn.bat file, first changing the path to those of your system. 
 Similar commands can be used on Unix systems, but there is no ready-made execution script.
