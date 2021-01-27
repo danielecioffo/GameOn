@@ -1,6 +1,10 @@
 # GameOn
 Repository for group project of Distributed Systems and Middleware Technologies
 
+Project Structure
+-----
+All information relating to the structure of the project can be found in its official documentation, while as regards the code it is possible to see it in the appropriate folders.
+
 Execute
 -----
 First you have to load the war on the TomCat web server, and then you can start TomCat and the CowBoy web server.
