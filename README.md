@@ -1,5 +1,6 @@
 # GameOn
-Repository for group project of Distributed Systems and Middleware Technologies
+Repository for group project of Distributed Systems and Middleware Technologies.
+GameOn is a collaborative platform for real-time gaming.
 
 Project Structure
 -----
