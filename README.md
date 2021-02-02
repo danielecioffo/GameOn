@@ -5,7 +5,7 @@ GameOn is a collaborative platform for real-time gaming.
 Project Structure
 -----
 All information relating to the structure of the project can be found in its official documentation, while as regards the code it is possible to see it in the appropriate folders.
-In the GameOn folder you will find the javaEE project that has be deployed on TomCat, while in web_server_erlang you will find the code to implement the cowboy web server, plus the code for other system processes.
+In the GameOn folder you will find the javaEE project that has been deployed on TomCat, while in web_server_erlang you will find the code to implement the cowboy web server, plus the code for other system processes.
 
 Execute
 -----
